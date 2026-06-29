@@ -219,6 +219,39 @@
     .hero-right{max-width:200px}
   }
 
+
+  /* EDUCATION TIMELINE */
+  #education{border-bottom:1px solid var(--border);background:var(--bg2)}
+  .edu-timeline{display:flex;flex-direction:column;gap:0}
+  .edu-tl-item{display:grid;grid-template-columns:96px 1fr;gap:28px;align-items:start;padding:36px 0;border-bottom:1px solid var(--border)}
+  .edu-tl-item:last-child{border-bottom:none;padding-bottom:0}
+  .edu-tl-item:first-child{padding-top:0}
+  .edu-tl-left{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:4px}
+  .edu-tl-logos{display:flex;align-items:center;gap:6px}
+  .edu-logo-badge{background:var(--ink);color:#fff;font-size:10px;font-weight:700;letter-spacing:0.06em;padding:8px 10px;border-radius:8px;text-align:center;line-height:1.2;min-width:38px}
+  .edu-logo-badge.ntu{background:var(--accent)}
+  .edu-logo-badge.nitdgp{background:var(--ink3);font-size:9px;padding:8px 10px;line-height:1.3}
+  .edu-logo-plus{font-size:12px;color:var(--muted2);font-weight:700}
+  .edu-tl-body{display:flex;flex-direction:column;gap:14px}
+  .edu-tl-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .edu-tl-inst{font-size:15px;font-weight:700;color:var(--ink);line-height:1.3}
+  .edu-tl-sub{font-size:12px;color:var(--muted);margin-top:3px;font-weight:500}
+  .edu-tl-date{font-size:11px;color:var(--muted2);background:var(--bg3);border:1px solid var(--border);padding:4px 12px;border-radius:100px;white-space:nowrap;flex-shrink:0;font-weight:600;letter-spacing:0.03em}
+  .edu-tl-degree{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--ink3)}
+  .edu-degree-chip{background:var(--accent-light);color:var(--accent);font-size:10px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--accent-mid);flex-shrink:0}
+  .edu-tl-tags{display:flex;flex-wrap:wrap;gap:7px}
+  .edu-tag{background:var(--bg);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:3px 10px;border-radius:100px;letter-spacing:0.02em}
+  .edu-tl-note{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--muted);line-height:1.7;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent-mid);border-radius:0 8px 8px 0;padding:10px 14px}
+  .edu-tl-note svg{flex-shrink:0;margin-top:2px;stroke:var(--accent2)}
+  .edu-tl-medal{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent-mid);padding:8px 14px;border-radius:8px;width:fit-content}
+  .edu-tl-medal svg{flex-shrink:0;stroke:var(--accent)}
+  @media(max-width:680px){
+    .edu-tl-item{grid-template-columns:1fr;gap:16px}
+    .edu-tl-left{flex-direction:row;justify-content:flex-start}
+    .edu-tl-header{flex-direction:column;gap:8px}
+    .edu-tl-date{align-self:flex-start}
+  }
+
 </style>
 </head>
 <body>
@@ -232,7 +265,7 @@
       <a href="#skills">Skills</a>
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
-      <a href="#achievements">Awards</a>
+      <a href="#education">Education</a><a href="#achievements">Awards</a>
       <a href="#contact">Contact</a>
     </div>
     <div style="display:flex;align-items:center;gap:14px">
@@ -250,7 +283,7 @@
   <a href="#skills" onclick="closeMenu()">Skills</a>
   <a href="#experience" onclick="closeMenu()">Experience</a>
   <a href="#projects" onclick="closeMenu()">Projects</a>
-  <a href="#achievements" onclick="closeMenu()">Awards</a>
+  <a href="#education" onclick="closeMenu()">Education</a><a href="#achievements" onclick="closeMenu()">Awards</a>
   <a href="#contact" onclick="closeMenu()">Contact / Hire Me →</a>
 </div>
 
@@ -323,6 +356,85 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="inner">
+    <div class="sec-label">Education</div>
+    <h2 class="sec-title">Academic <em>background</em></h2>
+    <div class="edu-timeline">
+
+      <!-- IISc + NTU -->
+      <div class="edu-tl-item">
+        <div class="edu-tl-left">
+          <div class="edu-tl-logos">
+            <div class="edu-logo-badge">IISc</div>
+            <div class="edu-logo-plus">×</div>
+            <div class="edu-logo-badge ntu">NTU</div>
+          </div>
+        </div>
+        <div class="edu-tl-body">
+          <div class="edu-tl-header">
+            <div>
+              <div class="edu-tl-inst">Indian Institute of Science, Bangalore &amp; National Taiwan University</div>
+              <div class="edu-tl-sub">IISc–NTU Joint Dual Degree Program · Bangalore &amp; Taipei</div>
+            </div>
+            <span class="edu-tl-date">Jul 2025 – May 2027</span>
+          </div>
+          <div class="edu-tl-degree">
+            <span class="edu-degree-chip">M.Tech</span>
+            Semiconductor Technology
+          </div>
+          <div class="edu-tl-tags">
+            <span class="edu-tag">2D Materials</span>
+            <span class="edu-tag">Nanoelectronics</span>
+            <span class="edu-tag">Cleanroom Fabrication</span>
+            <span class="edu-tag">Device Physics</span>
+            <span class="edu-tag">Process Integration</span>
+          </div>
+          <div class="edu-tl-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Pursuing research across two world-class institutions — IISc (India) and NTU (Taiwan) — with hands-on access to advanced semiconductor fabrication facilities.
+          </div>
+        </div>
+      </div>
+
+      <!-- NIT Durgapur -->
+      <div class="edu-tl-item">
+        <div class="edu-tl-left">
+          <div class="edu-tl-logos">
+            <div class="edu-logo-badge nitdgp">NIT<br/>DGP</div>
+          </div>
+        </div>
+        <div class="edu-tl-body">
+          <div class="edu-tl-header">
+            <div>
+              <div class="edu-tl-inst">National Institute of Technology, Durgapur</div>
+              <div class="edu-tl-sub">West Bengal, India</div>
+            </div>
+            <span class="edu-tl-date">Dec 2020 – May 2024</span>
+          </div>
+          <div class="edu-tl-degree">
+            <span class="edu-degree-chip">B.Tech</span>
+            Metallurgical &amp; Materials Engineering
+          </div>
+          <div class="edu-tl-tags">
+            <span class="edu-tag">Materials Science</span>
+            <span class="edu-tag">Thermodynamics</span>
+            <span class="edu-tag">Phase Transformations</span>
+            <span class="edu-tag">Characterization</span>
+          </div>
+          <div class="edu-tl-medal">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+            Institute Gold Medal &nbsp;·&nbsp; Highest CGPA in Metallurgical &amp; Materials Engineering
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -564,7 +676,7 @@
   }
   const nav=document.getElementById('main-nav');
   const btt=document.getElementById('backToTop');
-  const sections=['about','skills','experience','projects','achievements','contact'];
+  const sections=['about','skills','education','experience','projects','achievements','contact'];
   window.addEventListener('scroll',()=>{
     const y=window.scrollY;
     nav.classList.toggle('scrolled',y>20);
