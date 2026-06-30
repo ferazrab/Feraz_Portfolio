@@ -1070,12 +1070,12 @@
     //
     // If you later move this into a bundled project (Vite/CRA/Next),
     // the equivalent would be:
-    //   .env:  VITE_EMAILJS_PUBLIC_KEY=ZbiDFhe0fYthTlMNv
+    //   .env:  VITE_EMAILJS_PUBLIC_KEY=ZbiDFhe0fYthTlIMNv
     //   code:  import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     // — but the value still ends up in the shipped JS bundle either way.
     // ════════════════════════════════════════════════════════════
     const EMAILJS_CONFIG = {
-      PUBLIC_KEY:  'ZbiDFhe0fYthTlMNv',     // Account → API Keys → Public Key
+      PUBLIC_KEY:  'ZbiDFhe0fYthTlIMNv',    // Account → API Keys → Public Key
       SERVICE_ID:  'service_swa2d0f',       // Email Services → Gmail → Service ID
       TEMPLATE_ID: 'template_at6woe9'       // Email Templates → Template ID
     };
@@ -1093,13 +1093,25 @@
 
     const MAX_MSG_LEN = 1000;
 
-    // Initialize EmailJS (safe even if SDK hasn't fully loaded yet — guarded)
+    let emailjsInitialized = false; // prevents calling init() more than once unnecessarily
+
+    // Initialize EmailJS. Safe to call multiple times — the SDK script tag
+    // loads asynchronously, so on first page load window.emailjs may not
+    // exist yet. We retry this right before send() as the real guarantee.
     function ensureEmailJS() {
-      if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
-        try { window.emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY }); } catch(e) {}
+      if (emailjsInitialized) return true;
+      if (window.emailjs) {
+        try {
+          window.emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
+          emailjsInitialized = true;
+        } catch (e) {
+          console.error('[ContactForm] emailjs.init() threw:', e);
+        }
       }
+      return emailjsInitialized;
     }
-    ensureEmailJS();
+    ensureEmailJS(); // best-effort on page load
+
 
     // ── Reveal animation on scroll into view ──
     const revealObserver = new IntersectionObserver((entries) => {
@@ -1266,14 +1278,11 @@
         if (!window.emailjs) {
           throw new Error('EmailJS SDK did not load. Check that the <script src="...email.min.js"> tag is present and not blocked (ad-blocker, CSP, or offline CDN).');
         }
-        if (!EMAILJS_CONFIG.PUBLIC_KEY || EMAILJS_CONFIG.PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') {
-          throw new Error('EMAILJS_CONFIG.PUBLIC_KEY is unset. Replace the placeholder in EMAILJS_CONFIG with your real Public Key from the EmailJS dashboard → Account → API Keys.');
-        }
-        if (!EMAILJS_CONFIG.SERVICE_ID || EMAILJS_CONFIG.SERVICE_ID === 'YOUR_EMAILJS_SERVICE_ID') {
-          throw new Error('EMAILJS_CONFIG.SERVICE_ID is unset. Replace the placeholder with your real Service ID from EmailJS dashboard → Email Services.');
-        }
-        if (!EMAILJS_CONFIG.TEMPLATE_ID || EMAILJS_CONFIG.TEMPLATE_ID === 'YOUR_EMAILJS_TEMPLATE_ID') {
-          throw new Error('EMAILJS_CONFIG.TEMPLATE_ID is unset. Replace the placeholder with your real Template ID from EmailJS dashboard → Email Templates.');
+
+        // Guaranteed init right before send — covers the case where the SDK
+        // script finished loading after the page-load ensureEmailJS() ran.
+        if (!ensureEmailJS()) {
+          throw new Error('EmailJS could not be initialized. Check EMAILJS_CONFIG.PUBLIC_KEY is set correctly.');
         }
 
         const response = await window.emailjs.send(
