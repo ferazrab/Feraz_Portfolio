@@ -1067,7 +1067,7 @@
     // Private Key is never used anywhere in this file.
     const EMAILJS_PUBLIC_KEY  = 'ZbiDFhe0fYthTlIMNv';
     const EMAILJS_SERVICE_ID  = 'service_swa2d0f';
-    const EMAILJS_TEMPLATE_ID = 'template_at6woe9';
+    const EMAILJS_TEMPLATE_ID = 'template_ufndpn8';
     const RECIPIENT_EMAIL     = 'ferazrab98@gmail.com'; // set as the fixed "To Email" in the EmailJS template itself
 
     const form      = document.getElementById('contactForm');
@@ -1227,15 +1227,16 @@
     }
 
     // ── EmailJS send — isolated, single responsibility ──────────
-    // Sends exactly the 5 variables the template defines:
-    // name, email, phone, message, time. No extra keys.
-    async function sendContactEmail({ name, email, phone, message }) {
+    // Sends EXACTLY the 5 template parameters this template expects:
+    // title, name, email, time, message. Nothing else — no phone,
+    // no from_name, no reply_to, no to_email, no user_name.
+    async function sendContactEmail({ name, email, message }) {
       const templateParams = {
+        title:   'Portfolio Contact',
         name:    name,
         email:   email,
-        phone:   phone,
-        message: message,
-        time:    new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+        time:    new Date().toLocaleString(),
+        message: message
       };
 
       console.groupCollapsed('%c[EmailJS] Send attempt', 'color:#25A05A;font-weight:bold');
@@ -1243,8 +1244,8 @@
       console.log('Template ID:', EMAILJS_TEMPLATE_ID);
       console.log('Public Key (masked):', EMAILJS_PUBLIC_KEY.slice(0, 4) + '…');
       console.log('Recipient (set in EmailJS template "To Email"):', RECIPIENT_EMAIL);
-      console.log('Template params (keys must equal exactly name, email, phone, message, time):', templateParams);
-      console.log('Param keys:', Object.keys(templateParams));
+      console.log('templateParams:', templateParams);
+      console.log('templateParams keys:', Object.keys(templateParams));
       console.groupEnd();
 
       if (!window.emailjs) {
@@ -1254,19 +1255,18 @@
         throw new Error('EmailJS failed to initialize — check EMAILJS_PUBLIC_KEY.');
       }
 
+      const sendArgs = [EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams];
+      console.log('[EmailJS] emailjs.send() arguments:', sendArgs);
+
       // emailjs.send(serviceID, templateID, templateParams)
-      const response = await window.emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        templateParams
-      );
+      const response = await window.emailjs.send(...sendArgs);
 
       console.log('%c[EmailJS] Success response:', 'color:#25A05A;font-weight:bold', response);
       return response;
     }
 
-    // ── Submit handler ──
-    let isSubmitting = false; // duplicate-submission guard
+    // ── Submit handler — single listener, duplicate-submission guard ──
+    let isSubmitting = false;
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -1291,7 +1291,6 @@
         await sendContactEmail({
           name:    nameEl.value.trim(),
           email:   emailEl.value.trim(),
-          phone:   phoneEl.value.trim(),
           message: msgEl.value.trim()
         });
 
@@ -1306,10 +1305,9 @@
 
       } catch (err) {
         console.groupCollapsed('%c[EmailJS] SEND FAILED — full diagnostic', 'color:#e0566b;font-weight:bold');
+        console.error('error.status:', (err && err.status !== undefined) ? err.status : '(no status — likely thrown before the API call, see message above)');
+        console.error('error.text:', (err && err.text !== undefined) ? err.text : '(none returned)');
         console.error('Full error object:', err);
-        console.error('HTTP status:', (err && err.status !== undefined) ? err.status : '(no status — likely thrown before the API call, see message above)');
-        console.error('Error text from EmailJS:', (err && err.text !== undefined) ? err.text : '(none returned)');
-        console.error('Error message:', (err && err.message) ? err.message : '(none)');
         console.groupEnd();
 
         let userMessage = 'Could not send message. Please try again or email directly.';
