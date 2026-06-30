@@ -408,6 +408,60 @@
     .contact-grid{grid-template-columns:1fr;gap:20px}
     .contact-card--left{justify-content:flex-start}
     .contact-form-card{padding:28px 22px}
+  .visitor-counter-card{padding:26px 22px}
+  }
+  /* ── VISITOR COUNTER CARD ── */
+  .visitor-counter-card{
+    max-width:340px;
+    margin:0 auto;
+    background:linear-gradient(160deg,rgba(20,20,20,0.97) 0%,rgba(10,10,10,0.99) 100%);
+    border:1px solid rgba(184,239,67,0.12);
+    border-radius:18px;
+    padding:30px 32px;
+    position:relative;
+    overflow:hidden;
+    backdrop-filter:blur(10px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.04);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:10px;
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 0.7s ease,transform 0.7s ease;
+  }
+  .visitor-counter-card.vc-visible{opacity:1;transform:translateY(0)}
+  .visitor-counter-card::before{
+    content:'';position:absolute;top:-60px;left:-60px;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,rgba(37,160,90,0.22) 0%,transparent 70%);pointer-events:none
+  }
+  .vc-icon-wrap{
+    position:relative;z-index:1;
+    width:42px;height:42px;border-radius:50%;
+    background:rgba(37,160,90,0.14);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:2px;
+  }
+  .vc-icon-wrap svg{width:20px;height:20px;color:var(--accent2)}
+  .vc-label{position:relative;z-index:1;font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:0.14em;text-transform:uppercase}
+  .vc-count{
+    position:relative;z-index:1;
+    font-family:'DM Serif Display',serif;
+    font-size:42px;
+    line-height:1.1;
+    color:#fff;
+    letter-spacing:-0.01em;
+    min-height:50px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .vc-count.vc-error{font-size:20px;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.45);font-weight:600}
+  .vc-sub{position:relative;z-index:1;font-size:12px;color:rgba(255,255,255,0.4)}
+  .vc-spinner{
+    width:22px;height:22px;border-radius:50%;
+    border:2.5px solid rgba(255,255,255,0.15);
+    border-top-color:var(--accent2);
+    animation:cfSpin 0.7s linear infinite;
   }
   @media(max-width:480px){
     .cf-toast{left:16px;right:16px;max-width:none;top:16px}
@@ -1012,6 +1066,17 @@
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
+<!-- ── VISITOR COUNTER ── -->
+<section id="visitor-counter-section" style="padding:60px 5%;background:var(--bg);border-bottom:1px solid var(--border)">
+  <div class="visitor-counter-card" id="visitorCounterCard">
+    <div class="vc-icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    </div>
+    <div class="vc-label">Portfolio Visitors</div>
+    <div class="vc-count" id="vcCount"><span class="vc-spinner" aria-hidden="true"></span></div>
+    <div class="vc-sub">Total visits since launch</div>
+  </div>
+</section>
 
 <!-- FOOTER -->
 <footer>
@@ -1346,6 +1411,86 @@
     // Initial state
     updateCounter();
     refreshSubmitState();
+  })();
+
+
+
+  // ════════════════════════════════════════════════════════════
+  // VISITOR COUNTER — CounterAPI (https://counterapi.dev) + localStorage
+  // Persistent global counter, incremented once per unique visitor,
+  // with a smooth count-up animation and graceful failure handling.
+  // ════════════════════════════════════════════════════════════
+  (function initVisitorCounter(){
+    const countEl = document.getElementById('vcCount');
+    const cardEl  = document.getElementById('visitorCounterCard');
+    if (!countEl || !cardEl) return; // safety guard
+
+    // CounterAPI workspace/counter — replace with your own namespace
+    // at https://counterapi.dev if you don't already have one.
+    const CA_WORKSPACE = 'feraz-portfolio';
+    const CA_COUNTER    = 'visits';
+    const CA_BASE        = `https://api.counterapi.dev/v1/${CA_WORKSPACE}/${CA_COUNTER}`;
+    const STORAGE_KEY    = 'portfolio_visited_v1';
+
+    // ── Reveal animation on scroll into view (matches contact-form-card) ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          cardEl.classList.add('vc-visible');
+          revealObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+    revealObserver.observe(cardEl);
+
+    // ── Smooth count-up animation ──
+    function animateCount(target) {
+      const duration = 1200;
+      const start = performance.now();
+      countEl.classList.remove('vc-error');
+
+      function frame(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        const value = Math.floor(eased * target);
+        countEl.textContent = value.toLocaleString();
+        if (progress < 1) requestAnimationFrame(frame);
+        else countEl.textContent = target.toLocaleString();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function showUnavailable() {
+      countEl.classList.add('vc-error');
+      countEl.textContent = 'Unavailable';
+    }
+
+    // ── Fetch / increment ──
+    // Only hit the "/up" (increment) endpoint the first time this
+    // browser visits; every return visit just reads the current
+    // value so the count reflects unique visitors, not page loads.
+    async function loadVisitorCount() {
+      const alreadyVisited = localStorage.getItem(STORAGE_KEY) === 'true';
+      const endpoint = alreadyVisited ? CA_BASE : `${CA_BASE}/up`;
+
+      try {
+        const res = await fetch(endpoint, { method: 'GET' });
+        if (!res.ok) throw new Error(`CounterAPI responded with ${res.status}`);
+
+        const data = await res.json();
+        const total = Number(data && data.value);
+        if (!Number.isFinite(total)) throw new Error('CounterAPI returned a non-numeric value');
+
+        if (!alreadyVisited) localStorage.setItem(STORAGE_KEY, 'true');
+        animateCount(total);
+
+      } catch (err) {
+        console.error('[VisitorCounter] Failed to load count:', err);
+        showUnavailable();
+      }
+    }
+
+    loadVisitorCount();
   })();
 
 
