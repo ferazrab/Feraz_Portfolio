@@ -1065,7 +1065,11 @@
     // the Allowed Origins whitelist in the EmailJS dashboard
     // (Account → Security), not from hiding this string. The
     // Private Key is never used anywhere in this file.
-    const EMAILJS_PUBLIC_KEY  = 'ZbiDFhe0fYthTlIMNv';
+    //
+    // This is the ONLY place the Public Key, Service ID, and
+    // Template ID are defined anywhere in this file. There is no
+    // other emailjs.init() call and no other config object.
+    const EMAILJS_PUBLIC_KEY  = 'BQEnUBE9LLTc3-LH2';
     const EMAILJS_SERVICE_ID  = 'service_swa2d0f';
     const EMAILJS_TEMPLATE_ID = 'template_ufndpn8';
     const RECIPIENT_EMAIL     = 'ferazrab98@gmail.com'; // set as the fixed "To Email" in the EmailJS template itself
@@ -1083,19 +1087,25 @@
 
     const MAX_MSG_LEN = 1000;
 
-    // ── EmailJS SDK readiness ───────────────────────────────────
+    // ── EmailJS SDK init — runs exactly ONCE, ever ───────────────
     // The SDK <script> tag loads asynchronously, so window.emailjs
-    // may not exist the instant this IIFE runs. We poll briefly
-    // rather than assuming it's ready, and initialize exactly once.
-    let emailjsReady = false;
+    // may not exist the instant this IIFE runs. We poll briefly for
+    // the SDK object, but the guarded `initialized` flag below
+    // guarantees emailjs.init() itself only ever fires a single time.
+    let initialized = false;
 
-    function initEmailJS() {
-      if (emailjsReady) return true;
-      if (typeof window.emailjs === 'undefined') return false;
+    function initEmailJSOnce() {
+      if (initialized) return true;
+      if (typeof window.emailjs === 'undefined' || typeof window.emailjs.init !== 'function') return false;
+
       try {
         window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-        emailjsReady = true;
-        console.log('%c[EmailJS] Initialized successfully.', 'color:#25A05A;font-weight:bold');
+        initialized = true;
+        console.log(
+          '%c[EmailJS] init() called once.',
+          'color:#25A05A;font-weight:bold',
+          { publicKey: EMAILJS_PUBLIC_KEY, serviceId: EMAILJS_SERVICE_ID, templateId: EMAILJS_TEMPLATE_ID }
+        );
         return true;
       } catch (initErr) {
         console.error('[EmailJS] init() threw an error:', initErr);
@@ -1105,11 +1115,13 @@
 
     // Try immediately, then poll for up to 5s in case the SDK script
     // is still downloading (slow network, GitHub Pages cold cache, etc).
-    if (!initEmailJS()) {
+    // initEmailJSOnce() is idempotent — `initialized` prevents a
+    // second real init() call no matter how many times this fires.
+    if (!initEmailJSOnce()) {
       let attempts = 0;
       const pollId = setInterval(() => {
         attempts++;
-        if (initEmailJS() || attempts >= 25) clearInterval(pollId); // 25 × 200ms = 5s
+        if (initEmailJSOnce() || attempts >= 25) clearInterval(pollId); // 25 × 200ms = 5s
       }, 200);
     }
 
@@ -1240,9 +1252,9 @@
       };
 
       console.groupCollapsed('%c[EmailJS] Send attempt', 'color:#25A05A;font-weight:bold');
+      console.log('Public Key used:', EMAILJS_PUBLIC_KEY);
       console.log('Service ID:',  EMAILJS_SERVICE_ID);
       console.log('Template ID:', EMAILJS_TEMPLATE_ID);
-      console.log('Public Key (masked):', EMAILJS_PUBLIC_KEY.slice(0, 4) + '…');
       console.log('Recipient (set in EmailJS template "To Email"):', RECIPIENT_EMAIL);
       console.log('templateParams:', templateParams);
       console.log('templateParams keys:', Object.keys(templateParams));
@@ -1251,7 +1263,7 @@
       if (!window.emailjs) {
         throw new Error('EmailJS SDK not loaded — check the <script src="...email.min.js"> tag and network/ad-blocker.');
       }
-      if (!initEmailJS()) {
+      if (!initEmailJSOnce()) {
         throw new Error('EmailJS failed to initialize — check EMAILJS_PUBLIC_KEY.');
       }
 
