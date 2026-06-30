@@ -1254,25 +1254,37 @@
       submitBtn.classList.add('cf-loading');
       submitBtn.disabled = true;
 
+      // Send ONLY the keys the EmailJS template defines: {{name}} {{email}}
+      // {{message}} {{time}}. EmailJS's API can reject (400) when extra,
+      // unrecognized keys are included that the template doesn't reference —
+      // this is the exact difference between "Test It" (sends only template
+      // vars) succeeding and the live form (was sending 3 extra keys) failing.
+      //
+      // Reply-To and recipient address are NOT sent as data here — they must
+      // be configured directly in the EmailJS dashboard template settings:
+      //   Template → Settings → "To Email"   → ferazrab98@gmail.com
+      //   Template → Settings → "Reply To"   → {{email}}   (so replying goes to the visitor)
       const templateParams = {
-        name:     nameEl.value.trim(),          // matches template's {{name}}
-        email:    emailEl.value.trim(),         // matches template's {{email}}
-        phone:    phoneEl.value.trim(),         // NEW template var — add {{phone}} to your template (see notes below)
-        message:  msgEl.value.trim(),           // matches template's {{message}}
-        time:     new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }), // matches {{time}}
-        reply_to: emailEl.value.trim(),          // EmailJS special var: sets the email's Reply-To header to the visitor's address (works even though it's not in the visible template body)
-        to_email: 'ferazrab98@gmail.com'        // convenience var; actual recipient is controlled by the template's "To Email" field in the dashboard
+        name:    nameEl.value.trim(),     // matches template's {{name}}
+        email:   emailEl.value.trim(),    // matches template's {{email}}
+        message: msgEl.value.trim(),      // matches template's {{message}}
+        time:    new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) // matches {{time}}
+        // NOTE: phone number is collected and validated in the form (cf-phone)
+        // but is intentionally NOT sent yet because the template has no
+        // {{phone}} variable. To include it: add {{phone}} to the template
+        // body, then add  phone: phoneEl.value.trim()  back into this object.
       };
 
       // ── DIAGNOSTIC LOGGING (remove or silence in production if desired) ──
       console.groupCollapsed('%c[ContactForm] Submit attempt', 'color:#25A05A;font-weight:bold');
       console.log('SDK loaded (window.emailjs present)?', !!window.emailjs);
+      console.log('emailjs.init() already completed?', emailjsInitialized);
       console.log('Config in use:', {
         SERVICE_ID:  EMAILJS_CONFIG.SERVICE_ID,
         TEMPLATE_ID: EMAILJS_CONFIG.TEMPLATE_ID,
         PUBLIC_KEY:  EMAILJS_CONFIG.PUBLIC_KEY ? (EMAILJS_CONFIG.PUBLIC_KEY.slice(0,4) + '…') : '(empty)'
       });
-      console.log('Template param KEYS being sent:', Object.keys(templateParams));
+      console.log('Template param KEYS being sent (must equal exactly: name, email, message, time):', Object.keys(templateParams));
       console.log('Template params (full values):', templateParams);
       console.groupEnd();
 
