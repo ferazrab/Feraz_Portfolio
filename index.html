@@ -291,11 +291,126 @@
   .back-to-top{position:fixed;bottom:28px;right:28px;width:44px;height:44px;background:var(--ink);color:#fff;border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s,background 0.2s;z-index:90;box-shadow:0 4px 20px rgba(0,0,0,0.18)}
   .back-to-top.visible{opacity:1;pointer-events:auto}
   .back-to-top:hover{transform:translateY(-4px);background:var(--accent)}
-  @media(max-width:680px){
-    .media-card--wide{grid-column:span 1}
-    .media-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
-    .lightbox-nav.prev{left:6px}
-    .lightbox-nav.next{right:6px}
+  /* ── CONTACT GRID (two-column layout) ── */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+  .contact-card--left{height:100%;display:flex;flex-direction:column;justify-content:center}
+
+  /* ── CONTACT FORM CARD ── */
+  .contact-form-card{
+    background:linear-gradient(160deg,rgba(20,20,20,0.97) 0%,rgba(10,10,10,0.99) 100%);
+    border:1px solid rgba(184,239,67,0.12);
+    border-radius:18px;
+    padding:36px 32px;
+    position:relative;
+    overflow:hidden;
+    backdrop-filter:blur(10px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.04);
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 0.7s ease,transform 0.7s ease;
+  }
+  .contact-form-card.cf-visible{opacity:1;transform:translateY(0)}
+  .contact-form-card::before{
+    content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,rgba(37,160,90,0.22) 0%,transparent 70%);pointer-events:none
+  }
+  .cf-header{position:relative;z-index:1;margin-bottom:22px}
+  .cf-header h3{font-family:'DM Serif Display',serif;font-size:24px;color:#fff;font-weight:400;letter-spacing:-0.01em;margin-bottom:6px}
+  .cf-header p{font-size:13px;color:rgba(255,255,255,0.5)}
+
+  #contactForm{position:relative;z-index:1;display:flex;flex-direction:column;gap:18px}
+  .cf-field{display:flex;flex-direction:column;gap:7px}
+  .cf-label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);letter-spacing:0.03em}
+  .cf-req{color:var(--accent2)}
+
+  .cf-input-wrap{position:relative;display:flex;align-items:center}
+  .cf-icon{position:absolute;left:14px;width:16px;height:16px;color:rgba(255,255,255,0.35);pointer-events:none;transition:color 0.2s}
+  .cf-input-wrap--textarea .cf-icon{top:14px;align-self:flex-start}
+
+  .contact-form-card input,
+  .contact-form-card textarea{
+    width:100%;
+    background:rgba(255,255,255,0.05);
+    border:1.5px solid rgba(255,255,255,0.1);
+    color:#fff;
+    font-family:'DM Sans',sans-serif;
+    font-size:13.5px;
+    padding:12px 14px 12px 40px;
+    border-radius:10px;
+    transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;
+    outline:none;
+  }
+  .contact-form-card input::placeholder,
+  .contact-form-card textarea::placeholder{color:rgba(255,255,255,0.3)}
+  .contact-form-card input:focus,
+  .contact-form-card textarea:focus{
+    border-color:var(--accent2);
+    background:rgba(255,255,255,0.08);
+    box-shadow:0 0 0 3px rgba(37,160,90,0.15);
+  }
+  .contact-form-card input:focus ~ .cf-icon,
+  .cf-input-wrap:focus-within .cf-icon{color:var(--accent2)}
+  .contact-form-card textarea{resize:none;min-height:46px;max-height:200px;line-height:1.6;font-family:'DM Sans',sans-serif}
+
+  .cf-field.cf-invalid input,
+  .cf-field.cf-invalid textarea{border-color:#e0566b;box-shadow:0 0 0 3px rgba(224,86,107,0.12)}
+  .cf-field.cf-valid input,
+  .cf-field.cf-valid textarea{border-color:rgba(37,160,90,0.5)}
+
+  .cf-err{font-size:11.5px;color:#ff8095;min-height:14px;line-height:1.4}
+  .cf-meta-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .cf-counter{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap;flex-shrink:0;margin-left:auto}
+  .cf-counter.cf-counter--near{color:#e0a956}
+
+  .cf-submit{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    background:linear-gradient(135deg,var(--accent2),var(--accent));
+    color:#fff;border:none;border-radius:10px;
+    padding:14px 24px;font-size:14px;font-weight:700;letter-spacing:0.02em;
+    cursor:pointer;position:relative;overflow:hidden;
+    transition:transform 0.15s,box-shadow 0.25s,opacity 0.2s;
+    box-shadow:0 8px 24px rgba(37,160,90,0.3);
+    font-family:'DM Sans',sans-serif;
+  }
+  .cf-submit:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,160,90,0.42)}
+  .cf-submit:not(:disabled):active{transform:translateY(0)}
+  .cf-submit:disabled{opacity:0.38;cursor:not-allowed;box-shadow:none}
+  .cf-submit-icon{width:15px;height:15px;transition:transform 0.2s}
+  .cf-submit:not(:disabled):hover .cf-submit-icon{transform:translate(2px,-2px)}
+  .cf-spinner{display:none;width:15px;height:15px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%}
+  .cf-submit.cf-loading{pointer-events:none}
+  .cf-submit.cf-loading .cf-submit-label{opacity:0.6}
+  .cf-submit.cf-loading .cf-submit-icon{display:none}
+  .cf-submit.cf-loading .cf-spinner{display:inline-block;animation:cfSpin 0.7s linear infinite}
+  @keyframes cfSpin{to{transform:rotate(360deg)}}
+
+  .cf-privacy{font-size:11px;color:rgba(255,255,255,0.3);text-align:center;line-height:1.5;margin-top:-4px}
+
+  /* Toast for the contact form (separate from email-copy toast) */
+  .cf-toast{
+    position:fixed;top:24px;right:24px;z-index:300;
+    display:flex;align-items:center;gap:10px;
+    background:var(--ink);color:#fff;font-size:13px;font-weight:500;
+    padding:14px 20px;border-radius:10px;
+    box-shadow:0 12px 32px rgba(0,0,0,0.25);
+    transform:translateX(120%);opacity:0;
+    transition:transform 0.4s cubic-bezier(.16,1,.3,1),opacity 0.4s;
+    max-width:320px;
+  }
+  .cf-toast.show{transform:translateX(0);opacity:1}
+  .cf-toast.cf-toast--success{border-left:3px solid var(--accent2)}
+  .cf-toast.cf-toast--error{border-left:3px solid #e0566b}
+  .cf-toast-icon{width:18px;height:18px;flex-shrink:0}
+  .cf-toast--success .cf-toast-icon{color:var(--accent2)}
+  .cf-toast--error .cf-toast-icon{color:#e0566b}
+
+  @media(max-width:880px){
+    .contact-grid{grid-template-columns:1fr;gap:20px}
+    .contact-card--left{justify-content:flex-start}
+    .contact-form-card{padding:28px 22px}
+  }
+  @media(max-width:480px){
+    .cf-toast{left:16px;right:16px;max-width:none;top:16px}
   }
 
 </style>
@@ -797,34 +912,106 @@
 <!-- CONTACT -->
 <section id="contact">
   <div class="inner">
-    <div class="contact-card">
-      <h2>Let's build something<br/><em>remarkable.</em></h2>
-      <p>Seeking Summer 2026 research internships (May–July) in nanoelectronics, 2D materials, or advanced semiconductor devices. Open to collaborations worldwide.</p>
-      <div class="contact-links">
-        <a href="mailto:ferazrab98@gmail.com" class="contact-link" title="Send email">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 8 10-8"/></svg>
-          ferazrab98@gmail.com
-        </a>
-        <a href="mailto:ferazrab@iisc.ac.in" class="contact-link" title="IISc email">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 8 10-8"/></svg>
-          ferazrab@iisc.ac.in
-        </a>
-        <a href="tel:+917597688547" class="contact-link" title="Call">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 7.22 7.22l.89-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
-          +91 75976 88547
-        </a>
-        <a href="https://www.linkedin.com/in/feraz-rab-75fhfrr5yt/" target="_blank" rel="noopener" class="contact-link" title="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          LinkedIn
-        </a>
-        <button class="contact-link" onclick="copyEmail()" title="Copy email" style="cursor:pointer;font-family:inherit">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy Email
-        </button>
+    <div class="contact-grid">
+
+      <div class="contact-card contact-card--left">
+        <h2>Let's build something<br/><em>remarkable.</em></h2>
+        <p>Seeking Summer 2026 research internships (May–July) in nanoelectronics, 2D materials, or advanced semiconductor devices. Open to collaborations worldwide.</p>
+        <div class="contact-links">
+          <a href="mailto:ferazrab98@gmail.com" class="contact-link" title="Send email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 8 10-8"/></svg>
+            ferazrab98@gmail.com
+          </a>
+          <a href="mailto:ferazrab@iisc.ac.in" class="contact-link" title="IISc email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 8 10-8"/></svg>
+            ferazrab@iisc.ac.in
+          </a>
+          <a href="tel:+917597688547" class="contact-link" title="Call">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 7.22 7.22l.89-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+            +91 75976 88547
+          </a>
+          <a href="https://www.linkedin.com/in/feraz-rab-75fhfrr5yt/" target="_blank" rel="noopener" class="contact-link" title="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <button class="contact-link" onclick="copyEmail()" title="Copy email" style="cursor:pointer;font-family:inherit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Email
+          </button>
+        </div>
       </div>
+
+      <!-- ── NEW: Contact Form Card ── -->
+      <div class="contact-form-card" id="contactFormCard">
+        <div class="cf-header">
+          <h3>Send a message</h3>
+          <p>I'll get back to you within a day or two.</p>
+        </div>
+
+        <form id="contactForm" novalidate autocomplete="off">
+
+          <div class="cf-field">
+            <label for="cf-name" class="cf-label">Name <span class="cf-req">*</span></label>
+            <div class="cf-input-wrap">
+              <svg class="cf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="cf-name" name="name" placeholder="Your full name" required aria-required="true" aria-describedby="cf-name-err"/>
+            </div>
+            <div class="cf-err" id="cf-name-err" role="alert"></div>
+          </div>
+
+          <div class="cf-field">
+            <label for="cf-phone" class="cf-label">Contact Number <span class="cf-req">*</span></label>
+            <div class="cf-input-wrap">
+              <svg class="cf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 7.22 7.22l.89-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+              <input type="tel" id="cf-phone" name="phone" placeholder="+91 98765 43210" required aria-required="true" aria-describedby="cf-phone-err"/>
+            </div>
+            <div class="cf-err" id="cf-phone-err" role="alert"></div>
+          </div>
+
+          <div class="cf-field">
+            <label for="cf-email" class="cf-label">Email <span class="cf-req">*</span></label>
+            <div class="cf-input-wrap">
+              <svg class="cf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 8 10-8"/></svg>
+              <input type="email" id="cf-email" name="email" placeholder="you@example.com" required aria-required="true" aria-describedby="cf-email-err"/>
+            </div>
+            <div class="cf-err" id="cf-email-err" role="alert"></div>
+          </div>
+
+          <div class="cf-field">
+            <label for="cf-message" class="cf-label">Message <span class="cf-req">*</span></label>
+            <div class="cf-input-wrap cf-input-wrap--textarea">
+              <svg class="cf-icon cf-icon--textarea" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <textarea id="cf-message" name="message" placeholder="Tell me about the opportunity, project, or question you have..." required aria-required="true" aria-describedby="cf-message-err" rows="1" maxlength="1000"></textarea>
+            </div>
+            <div class="cf-meta-row">
+              <div class="cf-err" id="cf-message-err" role="alert"></div>
+              <div class="cf-counter" id="cf-counter">0 / 1000</div>
+            </div>
+          </div>
+
+          <button type="submit" class="cf-submit" id="cfSubmit" disabled>
+            <span class="cf-submit-label">Send Message</span>
+            <svg class="cf-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span class="cf-spinner" aria-hidden="true"></span>
+          </button>
+
+          <p class="cf-privacy">Your information is only used to respond to your message. Never shared.</p>
+        </form>
+      </div>
+
     </div>
   </div>
 </section>
+
+<!-- Contact form toast (separate from email-copy toast) -->
+<div class="cf-toast" id="cfToast" role="status" aria-live="polite">
+  <svg class="cf-toast-icon" id="cfToastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="cfToastText"></span>
+</div>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 
 <!-- FOOTER -->
 <footer>
@@ -864,6 +1051,214 @@
     document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current);});
   });
   document.getElementById('hamburger').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')toggleMenu();});
+
+  // ════════════════════════════════════════════════════════════
+  // CONTACT FORM — validation, auto-resize, EmailJS submission
+  // ════════════════════════════════════════════════════════════
+  (function initContactForm(){
+
+    // ── Config: EmailJS keys (replace with your own — see setup notes) ──
+    const EMAILJS_CONFIG = {
+      PUBLIC_KEY:  'YOUR_EMAILJS_PUBLIC_KEY',
+      SERVICE_ID:  'YOUR_EMAILJS_SERVICE_ID',
+      TEMPLATE_ID: 'YOUR_EMAILJS_TEMPLATE_ID'
+    };
+
+    const form      = document.getElementById('contactForm');
+    if (!form) return; // safety guard
+
+    const nameEl    = document.getElementById('cf-name');
+    const phoneEl   = document.getElementById('cf-phone');
+    const emailEl   = document.getElementById('cf-email');
+    const msgEl     = document.getElementById('cf-message');
+    const counterEl = document.getElementById('cf-counter');
+    const submitBtn = document.getElementById('cfSubmit');
+    const card      = document.getElementById('contactFormCard');
+
+    const MAX_MSG_LEN = 1000;
+
+    // Initialize EmailJS (safe even if SDK hasn't fully loaded yet — guarded)
+    function ensureEmailJS() {
+      if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== 'YOUR_EMAILJS_PUBLIC_KEY') {
+        try { window.emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY }); } catch(e) {}
+      }
+    }
+    ensureEmailJS();
+
+    // ── Reveal animation on scroll into view ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          card.classList.add('cf-visible');
+          revealObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.2 });
+    if (card) revealObserver.observe(card);
+
+    // ── Auto-resize textarea ──
+    function autoResize() {
+      msgEl.style.height = 'auto';
+      msgEl.style.height = Math.min(msgEl.scrollHeight, 200) + 'px';
+    }
+    msgEl.addEventListener('input', autoResize);
+
+    // ── Character counter ──
+    function updateCounter() {
+      const len = msgEl.value.length;
+      counterEl.textContent = `${len} / ${MAX_MSG_LEN}`;
+      counterEl.classList.toggle('cf-counter--near', len > MAX_MSG_LEN * 0.85);
+    }
+    msgEl.addEventListener('input', updateCounter);
+
+    // ── Validators ──
+    const validators = {
+      name: (v) => {
+        if (!v.trim()) return 'Please enter your name.';
+        if (v.trim().length < 2) return 'Name looks too short.';
+        return '';
+      },
+      phone: (v) => {
+        const cleaned = v.replace(/[\s\-()]/g, '');
+        if (!cleaned) return 'Please enter a contact number.';
+        if (!/^\+?[0-9]{7,15}$/.test(cleaned)) return 'Enter a valid phone number.';
+        return '';
+      },
+      email: (v) => {
+        if (!v.trim()) return 'Please enter your email.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())) return 'Enter a valid email address.';
+        return '';
+      },
+      message: (v) => {
+        if (!v.trim()) return 'Please write a message.';
+        if (v.trim().length < 10) return 'Message is a little short — add more detail.';
+        if (v.length > MAX_MSG_LEN) return `Message exceeds ${MAX_MSG_LEN} characters.`;
+        return '';
+      }
+    };
+
+    const fields = [
+      { el: nameEl,  key: 'name'    },
+      { el: phoneEl, key: 'phone'   },
+      { el: emailEl, key: 'email'   },
+      { el: msgEl,   key: 'message' }
+    ];
+
+    function validateField(el, key, showError) {
+      const wrap = el.closest('.cf-field');
+      const errEl = document.getElementById(`cf-${key === 'phone' ? 'phone' : key}-err`);
+      const msg = validators[key](el.value);
+      if (showError) {
+        wrap.classList.toggle('cf-invalid', !!msg);
+        wrap.classList.toggle('cf-valid', !msg && el.value.trim().length > 0);
+        if (errEl) errEl.textContent = msg;
+      }
+      return !msg;
+    }
+
+    function validateAll(showErrors) {
+      let allValid = true;
+      fields.forEach(({ el, key }) => {
+        const ok = validateField(el, key, showErrors);
+        if (!ok) allValid = false;
+      });
+      return allValid;
+    }
+
+    function refreshSubmitState() {
+      const valid = validateAll(false);
+      submitBtn.disabled = !valid;
+    }
+
+    fields.forEach(({ el, key }) => {
+      el.addEventListener('input', () => {
+        validateField(el, key, el.dataset.touched === 'true');
+        refreshSubmitState();
+      });
+      el.addEventListener('blur', () => {
+        el.dataset.touched = 'true';
+        validateField(el, key, true);
+      });
+    });
+
+    // ── Toast helper ──
+    const toastEl  = document.getElementById('cfToast');
+    const toastIcon = document.getElementById('cfToastIcon');
+    const toastText = document.getElementById('cfToastText');
+    let toastTimer = null;
+
+    const ICONS = {
+      success: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+      error: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
+    };
+
+    function showCfToast(type, message) {
+      toastIcon.innerHTML = ICONS[type] || ICONS.success;
+      toastText.textContent = message;
+      toastEl.className = `cf-toast cf-toast--${type} show`;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 5000);
+    }
+
+    // ── Submit handler ──
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      fields.forEach(({ el }) => el.dataset.touched = 'true');
+      const allValid = validateAll(true);
+      refreshSubmitState();
+      if (!allValid) {
+        showCfToast('error', 'Please fix the highlighted fields.');
+        return;
+      }
+
+      submitBtn.classList.add('cf-loading');
+      submitBtn.disabled = true;
+
+      const templateParams = {
+        from_name:    nameEl.value.trim(),
+        phone_number: phoneEl.value.trim(),
+        from_email:   emailEl.value.trim(),
+        message:      msgEl.value.trim(),
+        sent_at:      new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+      };
+
+      try {
+        if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') {
+          // EmailJS not configured yet — surface a clear, friendly message
+          throw new Error('EmailJS is not configured yet. See setup instructions.');
+        }
+
+        await window.emailjs.send(
+          EMAILJS_CONFIG.SERVICE_ID,
+          EMAILJS_CONFIG.TEMPLATE_ID,
+          templateParams
+        );
+
+        showCfToast('success', "Message sent! I'll get back to you soon.");
+        form.reset();
+        autoResize();
+        updateCounter();
+        fields.forEach(({ el }) => {
+          el.dataset.touched = 'false';
+          el.closest('.cf-field').classList.remove('cf-valid', 'cf-invalid');
+        });
+        refreshSubmitState();
+
+      } catch (err) {
+        console.error('Contact form send failed:', err);
+        showCfToast('error', 'Could not send message. Please try again or email directly.');
+      } finally {
+        submitBtn.classList.remove('cf-loading');
+        refreshSubmitState();
+      }
+    });
+
+    // Initial state
+    updateCounter();
+    refreshSubmitState();
+  })();
+
 
   // ── Media filter ──
   const filters = document.querySelectorAll('.media-filter');
