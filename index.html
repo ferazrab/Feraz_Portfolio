@@ -67,7 +67,7 @@
   .hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--accent);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:30px;font-weight:600}
   .hero-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);animation:pulse 2s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-  h1{font-family:'DM Serif Display',serif;font-size:clamp(42px,6.5vw,78px);font-weight:400;line-height:1.02;letter-spacing:-0.02em;margin-bottom:12px;color:var(--ink)}
+  h1{font-family:'DM Serif Display',serif;font-size:clamp(52px,8vw,100px);font-weight:400;line-height:1.02;letter-spacing:-0.02em;margin-bottom:12px;color:var(--ink)}
   h1 em{font-style:italic;color:var(--accent2)}
   .hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--muted);max-width:520px;font-weight:400;margin-bottom:40px;line-height:1.7}
   .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px}
@@ -252,6 +252,52 @@
     .edu-tl-date{align-self:flex-start}
   }
 
+
+  /* ── MEDIA SECTION ── */
+  #media{border-bottom:1px solid var(--border);background:var(--bg)}
+  .media-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+  .media-filter{background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:600;padding:7px 18px;border-radius:100px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;letter-spacing:0.03em}
+  .media-filter:hover{border-color:var(--accent-mid);color:var(--accent)}
+  .media-filter.active{background:var(--accent-light);border-color:var(--accent-mid);color:var(--accent)}
+  .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:24px}
+  .media-card{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:transform 0.25s,box-shadow 0.25s,border-color 0.2s}
+  .media-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.1);border-color:var(--accent-mid)}
+  .media-card--wide{grid-column:span 2}
+  .media-img-wrap{position:relative;overflow:hidden;aspect-ratio:4/3}
+  .media-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s ease}
+  .media-card:hover .media-img-wrap img{transform:scale(1.05)}
+  .media-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;aspect-ratio:4/3;transition:transform 0.4s ease}
+  .media-card:hover .media-placeholder{transform:scale(1.04)}
+  .media-overlay{position:absolute;inset:0;background:rgba(10,10,10,0.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.25s}
+  .media-card:hover .media-overlay{opacity:1}
+  .media-caption{font-size:12px;color:var(--muted);padding:10px 14px;font-weight:500;line-height:1.4;background:var(--bg2)}
+  .media-card.hidden{display:none}
+  .media-upload-note{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted2);background:var(--bg2);border:1px dashed var(--border2);border-radius:8px;padding:10px 16px}
+
+  /* ── LIGHTBOX ── */
+  .lightbox{position:fixed;inset:0;background:rgba(5,5,5,0.93);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
+  .lightbox.open{display:flex}
+  .lightbox-content{position:relative;max-width:90vw;max-height:85vh;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .lightbox-content img{max-width:100%;max-height:78vh;border-radius:10px;object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+  .lightbox-caption{color:rgba(255,255,255,0.75);font-size:13px;text-align:center;font-weight:500;max-width:600px}
+  .lightbox-close{position:fixed;top:20px;right:24px;background:rgba(255,255,255,0.12);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;z-index:1001;line-height:1}
+  .lightbox-close:hover{background:rgba(255,255,255,0.22)}
+  .lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.12);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;z-index:1001}
+  .lightbox-nav:hover{background:rgba(255,255,255,0.22)}
+  .lightbox-nav.prev{left:16px}
+  .lightbox-nav.next{right:16px}
+
+  /* ── BACK TO TOP (improved) ── */
+  .back-to-top{position:fixed;bottom:28px;right:28px;width:44px;height:44px;background:var(--ink);color:#fff;border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.2s,background 0.2s;z-index:90;box-shadow:0 4px 20px rgba(0,0,0,0.18)}
+  .back-to-top.visible{opacity:1;pointer-events:auto}
+  .back-to-top:hover{transform:translateY(-4px);background:var(--accent)}
+  @media(max-width:680px){
+    .media-card--wide{grid-column:span 1}
+    .media-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+    .lightbox-nav.prev{left:6px}
+    .lightbox-nav.next{right:6px}
+  }
+
 </style>
 </head>
 <body>
@@ -262,10 +308,12 @@
     <div class="nav-logo" onclick="scrollToTop()">Feraz<span>.</span></div>
     <div class="nav-links">
       <a href="#about">About</a>
+      <a href="#education">Education</a>
       <a href="#skills">Skills</a>
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
-      <a href="#education">Education</a><a href="#achievements">Awards</a>
+      <a href="#achievements">Awards</a>
+      <a href="#media">Media</a>
       <a href="#contact">Contact</a>
     </div>
     <div style="display:flex;align-items:center;gap:14px">
@@ -280,10 +328,12 @@
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
   <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#education" onclick="closeMenu()">Education</a>
   <a href="#skills" onclick="closeMenu()">Skills</a>
   <a href="#experience" onclick="closeMenu()">Experience</a>
   <a href="#projects" onclick="closeMenu()">Projects</a>
-  <a href="#education" onclick="closeMenu()">Education</a><a href="#achievements" onclick="closeMenu()">Awards</a>
+  <a href="#achievements" onclick="closeMenu()">Awards</a>
+  <a href="#media" onclick="closeMenu()">Media</a>
   <a href="#contact" onclick="closeMenu()">Contact / Hire Me →</a>
 </div>
 
@@ -294,7 +344,7 @@
       <div class="hero-left">
     <div class="hero-tag">
       <span class="hero-dot"></span>
-      Open to Summer 2026 Research Internships
+      Actively seeking full-time opportunities &bull; May 2027 · Fabs, Foundries, OEMs, OSAT/ATMP &amp; Semiconductor R&D
     </div>
     <h1>Semiconductor<br/>Engineer &amp; <em>Researcher</em></h1>
     <p class="hero-sub">M.Tech candidate at IISc–NTU. Building next-gen devices at the intersection of 2D materials, nanoelectronics, and cleanroom fabrication.</p>
@@ -542,6 +592,16 @@
         <div class="proj-desc">Deposited SnO₂ thin films on quartz substrates via sputtering. Investigated the effect of RF power and gas partial pressure to optimize deposition conditions for transparent conductive oxide performance and film quality.</div>
         <div class="proj-year">Aug 2025 – Nov 2025 · IISc</div>
       </div>
+
+      <div class="proj-card">
+        <div class="proj-chip">2D Perovskites</div>
+        <div class="proj-title">Optical Properties &amp; Carrier Dynamics in 2D (PA)₂PbI₄ Perovskite Thin Films</div>
+        <div class="proj-desc">Systematic study across UV-Vis, PDS, PL, TCSPC, and PLQY demonstrating ability to design, execute, and critically interpret multi-technique characterisation experiments — covering both thin-film processing and carrier physics domains.</div>
+        <div class="proj-tags" style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px">
+          <span class="tag">UV-Vis</span><span class="tag">PDS</span><span class="tag">PL</span><span class="tag">TCSPC</span><span class="tag">PLQY</span><span class="tag">Thin-film Processing</span>
+        </div>
+        <div class="proj-year">Jan 2026 – Apr 2026 · IISc</div>
+      </div>
       <div class="proj-card">
         <div class="proj-chip">3D Integration</div>
         <div class="proj-title">Wafer-to-Wafer Bonding for 3D IC Integration</div>
@@ -616,6 +676,124 @@
   </div>
 </section>
 
+
+<!-- MEDIA -->
+<section id="media">
+  <div class="inner">
+    <div class="sec-label">Media</div>
+    <h2 class="sec-title">Work &amp; <em>moments</em></h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;max-width:560px">Photos from the lab, conferences, presentations, and research life. Click any image to view full-size.</p>
+
+    <!-- Filter tabs -->
+    <div class="media-filters" role="tablist">
+      <button class="media-filter active" data-filter="all" role="tab" aria-selected="true">All</button>
+      <button class="media-filter" data-filter="lab" role="tab" aria-selected="false">Lab &amp; Cleanroom</button>
+      <button class="media-filter" data-filter="conference" role="tab" aria-selected="false">Conferences</button>
+      <button class="media-filter" data-filter="campus" role="tab" aria-selected="false">Campus Life</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="media-grid" id="mediaGrid">
+
+      <!-- Placeholder cards — swap src for real images -->
+      <div class="media-card" data-cat="lab" data-caption="Cleanroom fabrication session at IISc">
+        <div class="media-img-wrap">
+          <div class="media-placeholder" style="background:linear-gradient(135deg,#E8F5EE 0%,#B8E8CC 100%)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#25A05A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3L14.5 4z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>Lab Photo</span>
+          </div>
+          <div class="media-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+        <div class="media-caption">Cleanroom fabrication session at IISc</div>
+      </div>
+
+      <div class="media-card" data-cat="lab" data-caption="Thin-film deposition setup — RF sputtering">
+        <div class="media-img-wrap">
+          <div class="media-placeholder" style="background:linear-gradient(135deg,#E8F0F5 0%,#B8CCE8 100%)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#256AA0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3L14.5 4z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>Equipment Photo</span>
+          </div>
+          <div class="media-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+        <div class="media-caption">RF sputtering setup — SnO₂ deposition</div>
+      </div>
+
+      <div class="media-card media-card--wide" data-cat="conference" data-caption="Presentation at semiconductor workshop">
+        <div class="media-img-wrap">
+          <div class="media-placeholder" style="background:linear-gradient(135deg,#F5EEE8 0%,#E8CCB8 100%)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A06025" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3L14.5 4z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>Conference Photo</span>
+          </div>
+          <div class="media-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+        <div class="media-caption">Semiconductor workshop presentation</div>
+      </div>
+
+      <div class="media-card" data-cat="campus" data-caption="IISc campus, Bangalore">
+        <div class="media-img-wrap">
+          <div class="media-placeholder" style="background:linear-gradient(135deg,#EEF5E8 0%,#CCE8B8 100%)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5AA025" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3L14.5 4z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>Campus</span>
+          </div>
+          <div class="media-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+        <div class="media-caption">IISc campus, Bangalore</div>
+      </div>
+
+      <div class="media-card" data-cat="lab" data-caption="SEM characterisation at IIT Hyderabad">
+        <div class="media-img-wrap">
+          <div class="media-placeholder" style="background:linear-gradient(135deg,#F5E8F0 0%,#E8B8D8 100%)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A0255A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3L14.5 4z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>SEM Lab</span>
+          </div>
+          <div class="media-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+        <div class="media-caption">SEM characterisation — IIT Hyderabad</div>
+      </div>
+
+      <div class="media-card" data-cat="conference" data-caption="Indo-Taiwan semiconductor program, NTHU">
+        <div class="media-img-wrap">
+          <div class="media-placeholder" style="background:linear-gradient(135deg,#F5F0E8 0%,#E8D8B8 100%)">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A08025" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3L14.5 4z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>Taiwan Program</span>
+          </div>
+          <div class="media-overlay">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+        <div class="media-caption">Indo-Taiwan Capacity Building Program, NTHU</div>
+      </div>
+
+    </div>
+
+    <div class="media-upload-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      This gallery is ready for your photos — replace the placeholder cards with your actual images.
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <div class="lightbox-content">
+    <img src="" alt="" id="lightboxImg" loading="lazy"/>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+  <button class="lightbox-nav prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+  <button class="lightbox-nav next" id="lbNext" aria-label="Next">&#8250;</button>
+</div>
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="inner">
@@ -676,7 +854,7 @@
   }
   const nav=document.getElementById('main-nav');
   const btt=document.getElementById('backToTop');
-  const sections=['about','skills','education','experience','projects','achievements','contact'];
+  const sections=['about','education','skills','experience','projects','achievements','media','contact'];
   window.addEventListener('scroll',()=>{
     const y=window.scrollY;
     nav.classList.toggle('scrolled',y>20);
@@ -686,6 +864,61 @@
     document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current);});
   });
   document.getElementById('hamburger').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')toggleMenu();});
+
+  // ── Media filter ──
+  const filters = document.querySelectorAll('.media-filter');
+  const mediaCards = document.querySelectorAll('.media-card');
+  filters.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filters.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+      const f = btn.dataset.filter;
+      mediaCards.forEach(card => {
+        card.classList.toggle('hidden', f !== 'all' && card.dataset.cat !== f);
+      });
+    });
+  });
+
+  // ── Lightbox ──
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightboxImg');
+  const lbCap = document.getElementById('lightboxCaption');
+  let lbCards = [], lbIdx = 0;
+
+  function openLightbox(card) {
+    lbCards = Array.from(document.querySelectorAll('.media-card:not(.hidden)'));
+    lbIdx = lbCards.indexOf(card);
+    showLb(lbIdx);
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function showLb(idx) {
+    const c = lbCards[idx];
+    const img = c.querySelector('img');
+    const ph = c.querySelector('.media-placeholder');
+    if (img) { lbImg.src = img.src; lbImg.alt = img.alt; }
+    else if (ph) { lbImg.src = ''; lbImg.alt = ''; }
+    lbCap.textContent = c.dataset.caption || '';
+  }
+  function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; lbImg.src=''; }
+
+  document.querySelectorAll('.media-card').forEach(card => {
+    card.addEventListener('click', () => openLightbox(card));
+    card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') openLightbox(card); });
+    card.setAttribute('tabindex','0');
+    card.setAttribute('role','button');
+  });
+  document.getElementById('lightboxClose').addEventListener('click', closeLb);
+  document.getElementById('lbPrev').addEventListener('click', () => { lbIdx=(lbIdx-1+lbCards.length)%lbCards.length; showLb(lbIdx); });
+  document.getElementById('lbNext').addEventListener('click', () => { lbIdx=(lbIdx+1)%lbCards.length; showLb(lbIdx); });
+  lb.addEventListener('click', e => { if(e.target===lb) closeLb(); });
+  document.addEventListener('keydown', e => {
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape') closeLb();
+    if(e.key==='ArrowLeft') { lbIdx=(lbIdx-1+lbCards.length)%lbCards.length; showLb(lbIdx); }
+    if(e.key==='ArrowRight') { lbIdx=(lbIdx+1)%lbCards.length; showLb(lbIdx); }
+  });
+
 </script>
 </body>
 </html>
