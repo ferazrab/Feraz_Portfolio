@@ -1255,12 +1255,13 @@
       submitBtn.disabled = true;
 
       const templateParams = {
-        from_name:      nameEl.value.trim(),
-        contact_number: phoneEl.value.trim(),
-        reply_to:       emailEl.value.trim(),   // lets EmailJS set the "Reply-To" header so replying goes to the visitor
-        message:        msgEl.value.trim(),
-        time:           new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
-        to_email:       'ferazrab98@gmail.com'  // explicit recipient var; the template's "To Email" field is also hardcoded as the real control
+        name:     nameEl.value.trim(),          // matches template's {{name}}
+        email:    emailEl.value.trim(),         // matches template's {{email}}
+        phone:    phoneEl.value.trim(),         // NEW template var — add {{phone}} to your template (see notes below)
+        message:  msgEl.value.trim(),           // matches template's {{message}}
+        time:     new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }), // matches {{time}}
+        reply_to: emailEl.value.trim(),          // EmailJS special var: sets the email's Reply-To header to the visitor's address (works even though it's not in the visible template body)
+        to_email: 'ferazrab98@gmail.com'        // convenience var; actual recipient is controlled by the template's "To Email" field in the dashboard
       };
 
       // ── DIAGNOSTIC LOGGING (remove or silence in production if desired) ──
@@ -1271,7 +1272,8 @@
         TEMPLATE_ID: EMAILJS_CONFIG.TEMPLATE_ID,
         PUBLIC_KEY:  EMAILJS_CONFIG.PUBLIC_KEY ? (EMAILJS_CONFIG.PUBLIC_KEY.slice(0,4) + '…') : '(empty)'
       });
-      console.log('Template params being sent:', templateParams);
+      console.log('Template param KEYS being sent:', Object.keys(templateParams));
+      console.log('Template params (full values):', templateParams);
       console.groupEnd();
 
       try {
@@ -1305,14 +1307,17 @@
 
       } catch (err) {
         // ── This is the part that was previously hidden behind a generic toast ──
-        console.error('%c[ContactForm] SEND FAILED — full error object below:', 'color:#e0566b;font-weight:bold');
-        console.error(err);
-        if (err && err.status) console.error('HTTP status:', err.status);
-        if (err && err.text)   console.error('EmailJS error text:', err.text);
+        console.groupCollapsed('%c[ContactForm] SEND FAILED', 'color:#e0566b;font-weight:bold');
+        console.error('Full error object:', err);
+        console.error('HTTP status:', err && err.status !== undefined ? err.status : '(none — likely not an EmailJS API error, see object above)');
+        console.error('EmailJS error text:', err && err.text !== undefined ? err.text : '(none)');
+        console.error('Keys sent in templateParams:', Object.keys(templateParams));
+        console.error('Reminder: these keys must exactly match the {{variables}} used in your EmailJS template body.');
+        console.groupEnd();
 
         // Build a specific, actionable message instead of a generic one
         let userMessage = 'Could not send message. Please try again or email directly.';
-        if (err && err.status === 400) userMessage = 'EmailJS rejected the request (400) — check Service ID, Template ID, and that all template variables exist.';
+        if (err && err.status === 400) userMessage = 'EmailJS rejected the request (400) — a template variable name mismatch is the most common cause. Check the console log above for the exact keys sent vs. what the template expects.';
         else if (err && err.status === 401) userMessage = 'EmailJS authentication failed (401) — check your Public Key.';
         else if (err && err.status === 403) userMessage = 'This domain is not authorized in EmailJS (403) — add it under Account → Security → Allowed Origins.';
         else if (err && err.status === 429) userMessage = 'Too many requests — please wait a moment and try again.';
