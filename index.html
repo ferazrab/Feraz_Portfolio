@@ -1239,17 +1239,21 @@
     }
 
     // ── EmailJS send — isolated, single responsibility ──────────
-    // Sends EXACTLY the 5 template parameters this template expects:
-    // title, name, email, time, message. Nothing else — no phone,
-    // no from_name, no reply_to, no to_email, no user_name.
-    async function sendContactEmail({ name, email, message }) {
+    // Sends EXACTLY these 6 template parameters:
+    // title, name, phone, email, time, message.
+    // No from_name, no reply_to, no to_email, no user_name.
+    async function sendContactEmail({ name, phone, email, message }) {
       const templateParams = {
         title:   'Portfolio Contact',
         name:    name,
+        phone:   phone, // Contact Number — must match {{phone}} in the EmailJS template
         email:   email,
         time:    new Date().toLocaleString(),
         message: message
       };
+
+      // Verify phone is present before sending
+      console.log('[EmailJS] phone in templateParams:', templateParams.phone);
 
       console.groupCollapsed('%c[EmailJS] Send attempt', 'color:#25A05A;font-weight:bold');
       console.log('Public Key used:', EMAILJS_PUBLIC_KEY);
@@ -1302,6 +1306,7 @@
       try {
         await sendContactEmail({
           name:    nameEl.value.trim(),
+          phone:   phoneEl.value.trim(), // Contact Number — now forwarded to EmailJS
           email:   emailEl.value.trim(),
           message: msgEl.value.trim()
         });
