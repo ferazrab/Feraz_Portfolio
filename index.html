@@ -1054,34 +1054,24 @@
 
   // ════════════════════════════════════════════════════════════
   // CONTACT FORM — validation, auto-resize, EmailJS submission
+  // (EmailJS integration rebuilt from scratch — see chat notes)
   // ════════════════════════════════════════════════════════════
   (function initContactForm(){
 
-    // ════════════════════════════════════════════════════════════
-    // EmailJS config — real values below.
-    //
-    // "Environment variables" note: this file is plain static HTML
-    // served by GitHub Pages, which has no build step and no server,
-    // so there is no runtime ".env" to read from. EmailJS's Public
-    // Key is designed to be public client-side — security comes from
-    // the "Allowed Origins" domain whitelist in your EmailJS dashboard
-    // (Account → Security), not from hiding this string. The Private
-    // Key is NEVER used here, anywhere — confirmed.
-    //
-    // If you later move this into a bundled project (Vite/CRA/Next),
-    // the equivalent would be:
-    //   .env:  VITE_EMAILJS_PUBLIC_KEY=ZbiDFhe0fYthTlIMNv
-    //   code:  import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    // — but the value still ends up in the shipped JS bundle either way.
-    // ════════════════════════════════════════════════════════════
-    const EMAILJS_CONFIG = {
-      PUBLIC_KEY:  'ZbiDFhe0fYthTlIMNv',    // Account → API Keys → Public Key
-      SERVICE_ID:  'service_swa2d0f',       // Email Services → Gmail → Service ID
-      TEMPLATE_ID: 'template_at6woe9'       // Email Templates → Template ID
-    };
+    // ── EmailJS config ──────────────────────────────────────────
+    // Static HTML on GitHub Pages has no build step, so there is no
+    // runtime ".env" to read from. The Public Key is meant to be
+    // public client-side in EmailJS's model — security comes from
+    // the Allowed Origins whitelist in the EmailJS dashboard
+    // (Account → Security), not from hiding this string. The
+    // Private Key is never used anywhere in this file.
+    const EMAILJS_PUBLIC_KEY  = 'ZbiDFhe0fYthTlIMNv';
+    const EMAILJS_SERVICE_ID  = 'service_swa2d0f';
+    const EMAILJS_TEMPLATE_ID = 'template_at6woe9';
+    const RECIPIENT_EMAIL     = 'ferazrab98@gmail.com'; // set as the fixed "To Email" in the EmailJS template itself
 
     const form      = document.getElementById('contactForm');
-    if (!form) return; // safety guard
+    if (!form) return; // safety guard — section not present on this page
 
     const nameEl    = document.getElementById('cf-name');
     const phoneEl   = document.getElementById('cf-phone');
@@ -1093,25 +1083,35 @@
 
     const MAX_MSG_LEN = 1000;
 
-    let emailjsInitialized = false; // prevents calling init() more than once unnecessarily
+    // ── EmailJS SDK readiness ───────────────────────────────────
+    // The SDK <script> tag loads asynchronously, so window.emailjs
+    // may not exist the instant this IIFE runs. We poll briefly
+    // rather than assuming it's ready, and initialize exactly once.
+    let emailjsReady = false;
 
-    // Initialize EmailJS. Safe to call multiple times — the SDK script tag
-    // loads asynchronously, so on first page load window.emailjs may not
-    // exist yet. We retry this right before send() as the real guarantee.
-    function ensureEmailJS() {
-      if (emailjsInitialized) return true;
-      if (window.emailjs) {
-        try {
-          window.emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
-          emailjsInitialized = true;
-        } catch (e) {
-          console.error('[ContactForm] emailjs.init() threw:', e);
-        }
+    function initEmailJS() {
+      if (emailjsReady) return true;
+      if (typeof window.emailjs === 'undefined') return false;
+      try {
+        window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        emailjsReady = true;
+        console.log('%c[EmailJS] Initialized successfully.', 'color:#25A05A;font-weight:bold');
+        return true;
+      } catch (initErr) {
+        console.error('[EmailJS] init() threw an error:', initErr);
+        return false;
       }
-      return emailjsInitialized;
     }
-    ensureEmailJS(); // best-effort on page load
 
+    // Try immediately, then poll for up to 5s in case the SDK script
+    // is still downloading (slow network, GitHub Pages cold cache, etc).
+    if (!initEmailJS()) {
+      let attempts = 0;
+      const pollId = setInterval(() => {
+        attempts++;
+        if (initEmailJS() || attempts >= 25) clearInterval(pollId); // 25 × 200ms = 5s
+      }, 200);
+    }
 
     // ── Reveal animation on scroll into view ──
     const revealObserver = new IntersectionObserver((entries) => {
@@ -1174,7 +1174,7 @@
 
     function validateField(el, key, showError) {
       const wrap = el.closest('.cf-field');
-      const errEl = document.getElementById(`cf-${key === 'phone' ? 'phone' : key}-err`);
+      const errEl = document.getElementById(`cf-${key}-err`);
       const msg = validators[key](el.value);
       if (showError) {
         wrap.classList.toggle('cf-invalid', !!msg);
@@ -1187,15 +1187,13 @@
     function validateAll(showErrors) {
       let allValid = true;
       fields.forEach(({ el, key }) => {
-        const ok = validateField(el, key, showErrors);
-        if (!ok) allValid = false;
+        if (!validateField(el, key, showErrors)) allValid = false;
       });
       return allValid;
     }
 
     function refreshSubmitState() {
-      const valid = validateAll(false);
-      submitBtn.disabled = !valid;
+      submitBtn.disabled = !validateAll(false);
     }
 
     fields.forEach(({ el, key }) => {
@@ -1210,22 +1208,61 @@
     });
 
     // ── Toast helper ──
-    const toastEl  = document.getElementById('cfToast');
+    const toastEl   = document.getElementById('cfToast');
     const toastIcon = document.getElementById('cfToastIcon');
     const toastText = document.getElementById('cfToastText');
-    let toastTimer = null;
+    let toastTimer  = null;
 
-    const ICONS = {
+    const TOAST_ICONS = {
       success: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
-      error: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
+      error:   '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
     };
 
     function showCfToast(type, message) {
-      toastIcon.innerHTML = ICONS[type] || ICONS.success;
+      toastIcon.innerHTML = TOAST_ICONS[type] || TOAST_ICONS.success;
       toastText.textContent = message;
       toastEl.className = `cf-toast cf-toast--${type} show`;
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toastEl.classList.remove('show'), 5000);
+    }
+
+    // ── EmailJS send — isolated, single responsibility ──────────
+    // Sends exactly the 5 variables the template defines:
+    // name, email, phone, message, time. No extra keys.
+    async function sendContactEmail({ name, email, phone, message }) {
+      const templateParams = {
+        name:    name,
+        email:   email,
+        phone:   phone,
+        message: message,
+        time:    new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+      };
+
+      console.groupCollapsed('%c[EmailJS] Send attempt', 'color:#25A05A;font-weight:bold');
+      console.log('Service ID:',  EMAILJS_SERVICE_ID);
+      console.log('Template ID:', EMAILJS_TEMPLATE_ID);
+      console.log('Public Key (masked):', EMAILJS_PUBLIC_KEY.slice(0, 4) + '…');
+      console.log('Recipient (set in EmailJS template "To Email"):', RECIPIENT_EMAIL);
+      console.log('Template params (keys must equal exactly name, email, phone, message, time):', templateParams);
+      console.log('Param keys:', Object.keys(templateParams));
+      console.groupEnd();
+
+      if (!window.emailjs) {
+        throw new Error('EmailJS SDK not loaded — check the <script src="...email.min.js"> tag and network/ad-blocker.');
+      }
+      if (!initEmailJS()) {
+        throw new Error('EmailJS failed to initialize — check EMAILJS_PUBLIC_KEY.');
+      }
+
+      // emailjs.send(serviceID, templateID, templateParams)
+      const response = await window.emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams
+      );
+
+      console.log('%c[EmailJS] Success response:', 'color:#25A05A;font-weight:bold', response);
+      return response;
     }
 
     // ── Submit handler ──
@@ -1235,18 +1272,14 @@
       e.preventDefault();
 
       if (isSubmitting) {
-        console.warn('[ContactForm] Submit blocked — already in progress.');
+        console.warn('[ContactForm] Submit ignored — a request is already in flight.');
         return;
       }
 
       fields.forEach(({ el }) => el.dataset.touched = 'true');
-      const allValid = validateAll(true);
-      refreshSubmitState();
-      if (!allValid) {
+      if (!validateAll(true)) {
+        refreshSubmitState();
         showCfToast('error', 'Please fix the highlighted fields.');
-        console.warn('[ContactForm] Validation failed — submission blocked.', {
-          name: nameEl.value, phone: phoneEl.value, email: emailEl.value, messageLength: msgEl.value.length
-        });
         return;
       }
 
@@ -1254,58 +1287,13 @@
       submitBtn.classList.add('cf-loading');
       submitBtn.disabled = true;
 
-      // Send ONLY the keys the EmailJS template defines: {{name}} {{email}}
-      // {{message}} {{time}}. EmailJS's API can reject (400) when extra,
-      // unrecognized keys are included that the template doesn't reference —
-      // this is the exact difference between "Test It" (sends only template
-      // vars) succeeding and the live form (was sending 3 extra keys) failing.
-      //
-      // Reply-To and recipient address are NOT sent as data here — they must
-      // be configured directly in the EmailJS dashboard template settings:
-      //   Template → Settings → "To Email"   → ferazrab98@gmail.com
-      //   Template → Settings → "Reply To"   → {{email}}   (so replying goes to the visitor)
-      const templateParams = {
-        name:    nameEl.value.trim(),     // matches template's {{name}}
-        email:   emailEl.value.trim(),    // matches template's {{email}}
-        message: msgEl.value.trim(),      // matches template's {{message}}
-        time:    new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) // matches {{time}}
-        // NOTE: phone number is collected and validated in the form (cf-phone)
-        // but is intentionally NOT sent yet because the template has no
-        // {{phone}} variable. To include it: add {{phone}} to the template
-        // body, then add  phone: phoneEl.value.trim()  back into this object.
-      };
-
-      // ── DIAGNOSTIC LOGGING (remove or silence in production if desired) ──
-      console.groupCollapsed('%c[ContactForm] Submit attempt', 'color:#25A05A;font-weight:bold');
-      console.log('SDK loaded (window.emailjs present)?', !!window.emailjs);
-      console.log('emailjs.init() already completed?', emailjsInitialized);
-      console.log('Config in use:', {
-        SERVICE_ID:  EMAILJS_CONFIG.SERVICE_ID,
-        TEMPLATE_ID: EMAILJS_CONFIG.TEMPLATE_ID,
-        PUBLIC_KEY:  EMAILJS_CONFIG.PUBLIC_KEY ? (EMAILJS_CONFIG.PUBLIC_KEY.slice(0,4) + '…') : '(empty)'
-      });
-      console.log('Template param KEYS being sent (must equal exactly: name, email, message, time):', Object.keys(templateParams));
-      console.log('Template params (full values):', templateParams);
-      console.groupEnd();
-
       try {
-        if (!window.emailjs) {
-          throw new Error('EmailJS SDK did not load. Check that the <script src="...email.min.js"> tag is present and not blocked (ad-blocker, CSP, or offline CDN).');
-        }
-
-        // Guaranteed init right before send — covers the case where the SDK
-        // script finished loading after the page-load ensureEmailJS() ran.
-        if (!ensureEmailJS()) {
-          throw new Error('EmailJS could not be initialized. Check EMAILJS_CONFIG.PUBLIC_KEY is set correctly.');
-        }
-
-        const response = await window.emailjs.send(
-          EMAILJS_CONFIG.SERVICE_ID,
-          EMAILJS_CONFIG.TEMPLATE_ID,
-          templateParams
-        );
-
-        console.log('%c[ContactForm] EmailJS success:', 'color:#25A05A;font-weight:bold', response);
+        await sendContactEmail({
+          name:    nameEl.value.trim(),
+          email:   emailEl.value.trim(),
+          phone:   phoneEl.value.trim(),
+          message: msgEl.value.trim()
+        });
 
         showCfToast('success', "Message sent! I'll get back to you soon.");
         form.reset();
@@ -1315,27 +1303,24 @@
           el.dataset.touched = 'false';
           el.closest('.cf-field').classList.remove('cf-valid', 'cf-invalid');
         });
-        refreshSubmitState();
 
       } catch (err) {
-        // ── This is the part that was previously hidden behind a generic toast ──
-        console.groupCollapsed('%c[ContactForm] SEND FAILED', 'color:#e0566b;font-weight:bold');
+        console.groupCollapsed('%c[EmailJS] SEND FAILED — full diagnostic', 'color:#e0566b;font-weight:bold');
         console.error('Full error object:', err);
-        console.error('HTTP status:', err && err.status !== undefined ? err.status : '(none — likely not an EmailJS API error, see object above)');
-        console.error('EmailJS error text:', err && err.text !== undefined ? err.text : '(none)');
-        console.error('Keys sent in templateParams:', Object.keys(templateParams));
-        console.error('Reminder: these keys must exactly match the {{variables}} used in your EmailJS template body.');
+        console.error('HTTP status:', (err && err.status !== undefined) ? err.status : '(no status — likely thrown before the API call, see message above)');
+        console.error('Error text from EmailJS:', (err && err.text !== undefined) ? err.text : '(none returned)');
+        console.error('Error message:', (err && err.message) ? err.message : '(none)');
         console.groupEnd();
 
-        // Build a specific, actionable message instead of a generic one
         let userMessage = 'Could not send message. Please try again or email directly.';
-        if (err && err.status === 400) userMessage = 'EmailJS rejected the request (400) — a template variable name mismatch is the most common cause. Check the console log above for the exact keys sent vs. what the template expects.';
-        else if (err && err.status === 401) userMessage = 'EmailJS authentication failed (401) — check your Public Key.';
+        if (err && err.status === 400) userMessage = 'EmailJS rejected the request (400) — a template variable name mismatch is the most common cause. Open the console for the exact keys sent.';
+        else if (err && err.status === 401) userMessage = 'EmailJS authentication failed (401) — check the Public Key.';
         else if (err && err.status === 403) userMessage = 'This domain is not authorized in EmailJS (403) — add it under Account → Security → Allowed Origins.';
         else if (err && err.status === 429) userMessage = 'Too many requests — please wait a moment and try again.';
         else if (err instanceof Error && err.message) userMessage = err.message;
 
         showCfToast('error', userMessage);
+
       } finally {
         isSubmitting = false;
         submitBtn.classList.remove('cf-loading');
@@ -1347,6 +1332,7 @@
     updateCounter();
     refreshSubmitState();
   })();
+
 
 
   // ── Media filter ──
