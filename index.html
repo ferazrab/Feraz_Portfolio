@@ -175,6 +175,22 @@
   .back-to-top.visible{opacity:1;pointer-events:auto}
   .back-to-top:hover{transform:translateY(-3px);background:var(--accent)}
 
+  /* ── RESUME DOWNLOAD CTA (used in Hero + Contact) ── */
+  .btn-download{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-size:13px;font-weight:600;padding:13px 28px;border-radius:8px;letter-spacing:0.02em;transition:transform 0.15s,box-shadow 0.25s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 8px 24px rgba(37,160,90,0.28)}
+  .btn-download:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,160,90,0.42)}
+  .btn-download svg{width:15px;height:15px;flex-shrink:0;transition:transform 0.2s}
+  .btn-download:hover svg{transform:translateY(2px)}
+
+  /* ── CONTACT STATUS (replaces old "Seeking..." paragraph) ── */
+  .contact-status{max-width:480px;margin:0 auto 32px;position:relative;z-index:1;opacity:0;transform:translateY(12px);animation:statusFadeIn 0.9s ease 0.1s forwards}
+  @keyframes statusFadeIn{to{opacity:1;transform:translateY(0)}}
+  .contact-status-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(37,160,90,0.12);border:1px solid rgba(37,160,90,0.32);border-radius:100px;padding:7px 16px;font-size:12.5px;color:var(--accent2);font-weight:700;letter-spacing:0.01em;margin-bottom:16px;line-height:1.5}
+  .contact-status-badge .hero-dot{flex-shrink:0}
+  .contact-status-sep{color:rgba(255,255,255,0.4);margin:0 1px}
+  .contact-status-divider{width:34px;height:1.5px;background:linear-gradient(90deg,var(--accent2),transparent);margin:0 auto 14px;animation:statusGlow 2.6s ease-in-out infinite}
+  @keyframes statusGlow{0%,100%{opacity:0.5;width:34px}50%{opacity:1;width:54px}}
+  .contact-status-line2{font-size:11.5px;color:rgba(255,255,255,0.55);letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
+
   /* TOAST */
   .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;font-size:13px;padding:10px 22px;border-radius:8px;opacity:0;pointer-events:none;transition:all 0.3s;z-index:200;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -436,6 +452,10 @@
     <p class="hero-sub">M.Tech candidate at IISc–NTU. Building next-gen devices at the intersection of 2D materials, nanoelectronics, and cleanroom fabrication.</p>
     <div class="hero-actions">
       <button class="btn-primary" onclick="scrollToContact()">Get in Touch</button>
+      <a href="./Feraz_Rab_Resume.pdf" download="Feraz_Rab_Resume.pdf" class="btn-download" title="Download Resume (PDF)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Resume
+      </a>
       <a href="#experience" class="btn-ghost">View My Work</a>
     </div>
     </div><!-- /hero-center -->
@@ -781,7 +801,23 @@
 
       <div class="contact-card contact-card--left">
         <h2>Let's build something<br/><em>remarkable.</em></h2>
-        <p>Seeking Summer 2026 research internships (May–July) in nanoelectronics, 2D materials, or advanced semiconductor devices. Open to collaborations worldwide.</p>
+
+        <!-- Updated status: was "Seeking Summer 2026 research internships..." -->
+        <div class="contact-status">
+          <div class="contact-status-badge">
+            <span class="hero-dot"></span>
+            Actively Seeking Full-Time Opportunities <span class="contact-status-sep">•</span> May 2027
+          </div>
+          <div class="contact-status-divider"></div>
+          <div class="contact-status-line2">Fabs &bull; Foundries &bull; OEMs &bull; OSAT/ATMP &bull; Semiconductor R&amp;D</div>
+        </div>
+
+        <!-- Resume CTA (recruiter-facing, downloads the attached PDF directly) -->
+        <a href="./Feraz_Rab_Resume.pdf" download="Feraz_Rab_Resume.pdf" class="btn-download" title="Download Resume (PDF)" style="margin-bottom:32px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Resume
+        </a>
+
         <div class="contact-links">
           <a href="mailto:ferazrab98@gmail.com" class="contact-link" title="Send email">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 8 10-8"/></svg>
@@ -798,6 +834,21 @@
           <a href="https://www.linkedin.com/in/feraz-rab-75fhfrr5yt/" target="_blank" rel="noopener" class="contact-link" title="LinkedIn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             LinkedIn
+          </a>
+          <!-- NEW: Instagram -->
+          <a href="https://www.instagram.com/ferazrab/" target="_blank" rel="noopener" class="contact-link" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Instagram
+          </a>
+          <!-- NEW: X (Twitter) -->
+          <a href="https://x.com/FerazRab" target="_blank" rel="noopener" class="contact-link" title="X (Twitter)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+            X
+          </a>
+          <!-- NEW: Google Scholar -->
+          <a href="https://scholar.google.com/citations?user=xaVue9sAAAAJ&hl=en" target="_blank" rel="noopener" class="contact-link" title="Google Scholar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 10v6"/></svg>
+            Scholar
           </a>
           <button class="contact-link" onclick="copyEmail()" title="Copy email" style="cursor:pointer;font-family:inherit">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
