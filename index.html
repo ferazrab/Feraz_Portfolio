@@ -1416,23 +1416,39 @@
 
 
   // ════════════════════════════════════════════════════════════
-  // VISITOR COUNTER — CounterAPI (https://counterapi.dev) + localStorage
-  // Persistent global counter, incremented once per unique visitor,
-  // with a smooth count-up animation and graceful failure handling.
+  // VISITOR COUNTER — CounterAPI v2 (official REST API)
+  // Docs verified: https://docs.counterapi.dev/api/endpoints/v2/
+  //   GET  https://api.counterapi.dev/v2/:workspace/:name/     → read current value (no increment)
+  //   GET  https://api.counterapi.dev/v2/:workspace/:name/up   → increment by 1
+  //   Auth: header  Authorization: Bearer <token>   (V2 only — v1 has no auth)
+  //
+  // Root cause of the previous "Failed to fetch": the old code called the
+  // V1 endpoint (api.counterapi.dev/v1/...) with an unrelated, made-up
+  // workspace/counter name ("feraz-portfolio/visits") and no auth header.
+  // Your real counter (ferazrabs-team-4627/feraz-rab-visitor-counter) is a
+  // V2 resource that requires the Bearer token — the V1 endpoint has no
+  // knowledge of it at all, so the request had nothing valid to resolve.
+  //
+  // CORS note: CounterAPI's own official docs show this exact pattern —
+  // a direct browser fetch()/JS-library call with an Authorization Bearer
+  // header — as the supported client-side usage for V2. No proxy server
+  // is required. The one caveat CounterAPI's own docs flag is that any
+  // token embedded in browser-side JS is visible to anyone viewing page
+  // source (the same situation as this site's EmailJS public key) — so
+  // keep this token scoped to only this one counter in the dashboard.
   // ════════════════════════════════════════════════════════════
   (function initVisitorCounter(){
     const countEl = document.getElementById('vcCount');
     const cardEl  = document.getElementById('visitorCounterCard');
-    if (!countEl || !cardEl) return; // safety guard
+    if (!countEl || !cardEl) return; // safety guard — section not present
 
-    // CounterAPI workspace/counter — replace with your own namespace
-    // at https://counterapi.dev if you don't already have one.
-    const CA_WORKSPACE = 'feraz-portfolio';
-    const CA_COUNTER    = 'visits';
-    const CA_BASE        = `https://api.counterapi.dev/v1/${CA_WORKSPACE}/${CA_COUNTER}`;
-    const STORAGE_KEY    = 'portfolio_visited_v1';
+    const CA_WORKSPACE = 'ferazrabs-team-4627';
+    const CA_COUNTER    = 'feraz-rab-visitor-counter';
+    const CA_TOKEN       = 'ut_deQWtYU4XNEw68lusB41J6KZRXcHlEBGRoTWWsdf';
+    const CA_BASE         = `https://api.counterapi.dev/v2/${CA_WORKSPACE}/${CA_COUNTER}`;
+    const STORAGE_KEY     = 'portfolio_visited_v2'; // new key — v2 is a distinct dataset from the old v1 attempt
 
-    // ── Reveal animation on scroll into view (matches contact-form-card) ──
+    // ── Reveal animation on scroll into view (unchanged) ──
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1443,7 +1459,7 @@
     }, { threshold: 0.2 });
     revealObserver.observe(cardEl);
 
-    // ── Smooth count-up animation ──
+    // ── Smooth count-up animation (unchanged) ──
     function animateCount(target) {
       const duration = 1200;
       const start = performance.now();
@@ -1465,27 +1481,89 @@
       countEl.textContent = 'Unavailable';
     }
 
-    // ── Fetch / increment ──
-    // Only hit the "/up" (increment) endpoint the first time this
-    // browser visits; every return visit just reads the current
-    // value so the count reflects unique visitors, not page loads.
+    // ── Single fetch helper with full diagnostic logging ──────────
+    async function callCounterAPI(path) {
+      const url = `${CA_BASE}${path}`;
+      const requestInfo = {
+        url,
+        method: 'GET',
+        headers: { Authorization: `Bearer ${CA_TOKEN.slice(0, 6)}…` } // token masked in logs
+      };
+      console.groupCollapsed('%c[VisitorCounter] Request', 'color:#25A05A;font-weight:bold');
+      console.log('Request URL:', url);
+      console.log('Request info:', requestInfo);
+      console.groupEnd();
+
+      let res;
+      try {
+        res = await fetch(url, {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${CA_TOKEN}` }
+        });
+      } catch (networkErr) {
+        // This branch fires for true network/CORS-level failures
+        // (DNS, offline, blocked preflight) — not for HTTP error codes.
+        console.groupCollapsed('%c[VisitorCounter] Network-level failure (fetch threw)', 'color:#e0566b;font-weight:bold');
+        console.error('Full error object:', networkErr);
+        console.error('This means the request never got a response at all —');
+        console.error('check: internet connection, ad-blocker, or browser CORS console entry above this log.');
+        console.groupEnd();
+        throw networkErr;
+      }
+
+      let body = null;
+      let rawText = '';
+      try {
+        rawText = await res.clone().text();
+        body = rawText ? JSON.parse(rawText) : null;
+      } catch (parseErr) {
+        console.warn('[VisitorCounter] Response body was not valid JSON:', rawText);
+      }
+
+      console.groupCollapsed(
+        `%c[VisitorCounter] Response — ${res.status} ${res.ok ? 'OK' : 'ERROR'}`,
+        `color:${res.ok ? '#25A05A' : '#e0566b'};font-weight:bold`
+      );
+      console.log('Response status:', res.status);
+      console.log('Response body:', body !== null ? body : rawText);
+      console.groupEnd();
+
+      if (!res.ok) {
+        const err = new Error(`CounterAPI responded with HTTP ${res.status}`);
+        err.status = res.status;
+        err.text = rawText;
+        err.body = body;
+        throw err;
+      }
+
+      return body;
+    }
+
+    // ── Load / increment ──
+    // Only hit "/up" the first time this browser visits; every return
+    // visit just reads the current value (GET on the base path, per the
+    // official docs) so the count reflects unique visitors, not page loads.
     async function loadVisitorCount() {
       const alreadyVisited = localStorage.getItem(STORAGE_KEY) === 'true';
-      const endpoint = alreadyVisited ? CA_BASE : `${CA_BASE}/up`;
+      const path = alreadyVisited ? '/' : '/up';
 
       try {
-        const res = await fetch(endpoint, { method: 'GET' });
-        if (!res.ok) throw new Error(`CounterAPI responded with ${res.status}`);
-
-        const data = await res.json();
+        const data = await callCounterAPI(path);
         const total = Number(data && data.value);
-        if (!Number.isFinite(total)) throw new Error('CounterAPI returned a non-numeric value');
+        if (!Number.isFinite(total)) {
+          throw new Error(`CounterAPI returned a non-numeric value: ${JSON.stringify(data)}`);
+        }
 
         if (!alreadyVisited) localStorage.setItem(STORAGE_KEY, 'true');
         animateCount(total);
 
       } catch (err) {
-        console.error('[VisitorCounter] Failed to load count:', err);
+        console.groupCollapsed('%c[VisitorCounter] Failed to load count — full diagnostic', 'color:#e0566b;font-weight:bold');
+        console.error('Full error object:', err);
+        console.error('error.status:', err && err.status !== undefined ? err.status : '(none — see network-level log above, if present)');
+        console.error('error.text:', err && err.text !== undefined ? err.text : '(none)');
+        console.error('error.message:', err && err.message ? err.message : '(none)');
+        console.groupEnd();
         showUnavailable();
       }
     }
