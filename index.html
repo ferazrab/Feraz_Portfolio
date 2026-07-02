@@ -569,8 +569,8 @@ body::before{
 }
 .cert-modal{
   position:relative;
-  max-width:min(900px,92vw);
-  max-height:90vh;
+  width:min(960px,94vw);
+  height:min(92vh,1300px);
   background:var(--bg);
   border-radius:16px;
   box-shadow:0 30px 80px rgba(0,0,0,0.45),0 2px 10px rgba(0,0,0,0.2);
@@ -593,29 +593,26 @@ body::before{
 .cert-modal-close:hover{background:rgba(10,10,10,0.8);transform:scale(1.06)}
 .cert-modal-close:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 .cert-modal-body{
-  width:100%;height:100%;max-height:90vh;
+  position:relative;
+  width:100%;height:100%;
   display:flex;align-items:center;justify-content:center;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
+  background:var(--bg2);
 }
-.cert-modal-body img,.cert-modal-body iframe{
+/* PDF fills the modal at its full page size — no cropping, no forced scaling;
+   the browser's native PDF viewer handles fit-to-width/aspect ratio internally. */
+.cert-modal-body iframe{
   display:block;
-  max-width:100%;max-height:90vh;
-  width:auto;height:auto;
-  object-fit:contain;
-  -webkit-user-drag:none;user-drag:none;
-  pointer-events:auto;
+  width:100%;height:100%;
+  border:none;
+  background:var(--bg2);
 }
-.cert-modal-body iframe{width:min(900px,88vw);height:min(90vh,1100px);border:none}
-.cert-modal-body img{cursor:zoom-in;transition:transform 0.25s ease}
-.cert-modal-body img.zoomed{cursor:zoom-out;transform:scale(1.6)}
 .cert-modal-loading{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   color:var(--muted2);font-size:12px;letter-spacing:0.05em;text-transform:uppercase;
 }
 
 @media (max-width:640px){
-  .cert-modal{max-width:96vw;border-radius:12px}
+  .cert-modal{width:96vw;height:88vh;border-radius:12px}
   .cert-modal-close{width:32px;height:32px;font-size:18px;top:8px;right:8px}
 }
 </style>
@@ -1205,16 +1202,18 @@ body::before{
   document.getElementById('hamburger').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')toggleMenu();});
 
   // ════════════════════════════════════════════════════════════
-  // CERTIFICATE PREVIEW MODAL — one reusable modal for every pill.
-  // To add a new certificate: add a pill in the HTML with a
-  // matching data-cert key, then add one line below pointing to
+  // CERTIFICATE PDF PREVIEW MODAL — one reusable modal for every
+  // pill, always renders the full PDF page (no cropping/scaling
+  // tricks — the browser's native PDF viewer handles fit/aspect
+  // ratio). To add a new certificate: add a pill in the HTML with
+  // a matching data-cert key, then add one line below pointing to
   // its file in assets/certificates/. Nothing else needs to change.
   // ════════════════════════════════════════════════════════════
   (function initCertificatePreview(){
     const CERT_FILES = {
-      'six-sigma': 'assets/certificates/six-sigma-yellow-belt.jpg',
-      'kennesaw':  'assets/certificates/kennesaw-state-university.jpg',
-      'opjems':    'assets/certificates/opjems-scholar-2022.jpg'
+      'six-sigma': 'assets/certificates/six-sigma-yellow-belt.pdf',
+      'kennesaw':  'assets/certificates/kennesaw-state-university.pdf',
+      'opjems':    'assets/certificates/opjems-scholar-2022.pdf'
     };
 
     const overlay   = document.getElementById('certModalOverlay');
@@ -1226,44 +1225,34 @@ body::before{
     if (!overlay || !modal || !body || !pills.length) return;
 
     let lastFocused = null;
-    let currentMedia = null;
+    let currentFrame = null;
 
-    function isPdf(path){ return /\.pdf($|\?)/i.test(path); }
-
-    function buildMedia(file){
-      if (isPdf(file)) {
-        const iframe = document.createElement('iframe');
-        iframe.src = file;
-        iframe.title = 'Certificate document';
-        iframe.loading = 'lazy';
-        return iframe;
-      }
-      const img = document.createElement('img');
-      img.src = file;
-      img.alt = 'Certificate preview';
-      img.loading = 'lazy';
-      img.draggable = false;
-      img.addEventListener('dragstart', e => e.preventDefault());
-      img.addEventListener('click', () => img.classList.toggle('zoomed')); // click-to-zoom
-      return img;
+    function buildPdfFrame(file){
+      const iframe = document.createElement('iframe');
+      // #view=FitH tells the browser's built-in PDF viewer to fit the
+      // full page width in frame — shows the whole page, no cropping.
+      iframe.src = `${file}#view=FitH`;
+      iframe.title = 'Certificate PDF';
+      iframe.loading = 'lazy';
+      return iframe;
     }
 
     function openModal(key){
       const file = CERT_FILES[key];
       if (!file) { console.warn(`[Certificates] No file configured for data-cert="${key}"`); return; }
 
-      // Reset body to just the loading indicator, then swap in fresh media
+      // Reset body to just the loading indicator, then swap in a fresh PDF frame
       body.innerHTML = '';
       loading.style.display = 'flex';
       body.appendChild(loading);
 
-      currentMedia = buildMedia(file);
-      currentMedia.style.opacity = '0';
-      currentMedia.addEventListener('load', () => {
+      currentFrame = buildPdfFrame(file);
+      currentFrame.style.opacity = '0';
+      currentFrame.addEventListener('load', () => {
         loading.style.display = 'none';
-        currentMedia.style.opacity = '1';
+        currentFrame.style.opacity = '1';
       });
-      body.appendChild(currentMedia);
+      body.appendChild(currentFrame);
 
       lastFocused = document.activeElement;
       overlay.classList.add('open');
@@ -1277,8 +1266,8 @@ body::before{
       overlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
       if (lastFocused) lastFocused.focus();
-      // Clear media after the fade-out transition so nothing keeps loading/playing in the background
-      setTimeout(() => { body.innerHTML = ''; currentMedia = null; }, 300);
+      // Clear the frame after the fade-out transition so the PDF stops loading in the background
+      setTimeout(() => { body.innerHTML = ''; currentFrame = null; }, 300);
     }
 
     pills.forEach(pill => {
