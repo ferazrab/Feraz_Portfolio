@@ -79,6 +79,54 @@
   .btn-ghost{background:transparent;color:var(--ink);font-size:13px;font-weight:500;padding:13px 30px;border-radius:8px;border:1.5px solid var(--border2);transition:border-color 0.2s,transform 0.15s;display:inline-block}
   .btn-ghost:hover{border-color:var(--ink);transform:translateY(-1px)}
   .hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+
+  /* ════════════════════════════════════════════════════════════
+     HERO IMAGE — ADDED
+     Two-column hero (text left / image right on desktop). HTML
+     source order is text-block then image, so mobile stacking
+     (image below text) falls out naturally with no extra rules. */
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:48px;align-items:center}
+
+  .hero-visual{position:relative;width:100%;isolation:isolate}
+  /* soft green/blue glow behind the image */
+  .hero-visual::before{
+    content:'';position:absolute;inset:-12%;z-index:-1;border-radius:32px;
+    background:
+      radial-gradient(45% 60% at 30% 40%,rgba(37,160,90,0.30) 0%,rgba(37,160,90,0) 70%),
+      radial-gradient(45% 60% at 75% 65%,rgba(140,203,255,0.30) 0%,rgba(140,203,255,0) 70%);
+    filter:blur(38px);opacity:0.9;pointer-events:none;
+  }
+  /* slow float — CSS-driven, translateY only, GPU-accelerated */
+  .hero-float{animation:heroFloat 6s ease-in-out infinite;will-change:transform}
+  /* mouse-tilt + hover-scale + scroll-parallax — JS-driven, own layer so it never fights the float animation above */
+  .hero-tilt{transform:perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1);transition:transform 0.25s cubic-bezier(.16,1,.3,1);will-change:transform}
+  .hero-img{
+    display:block;width:100%;height:auto;aspect-ratio:1920/520;object-fit:cover;
+    border-radius:20px;border:1px solid rgba(255,255,255,0.4);
+    box-shadow:0 24px 60px rgba(10,10,10,0.22),0 4px 16px rgba(10,10,10,0.10);
+  }
+  /* fade + slide in on first load */
+  .hero-visual{opacity:0;transform:translateY(24px);animation:heroVisualIn 0.9s cubic-bezier(.16,1,.3,1) 0.15s forwards}
+  @keyframes heroVisualIn{to{opacity:1;transform:translateY(0)}}
+  @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+  @media(min-width:769px){
+    .hero-grid{grid-template-columns:1.05fr 0.95fr;gap:40px}
+    .hero-grid .hero-center{text-align:left;align-items:flex-start}
+    .hero-grid .hero-center .hero-tag,
+    .hero-grid .hero-center .hero-sub{margin-left:0;margin-right:0}
+    .hero-grid .hero-center .hero-actions{justify-content:flex-start}
+  }
+  @media(max-width:768px){
+    .hero-visual::before{filter:blur(26px)}
+    .hero-img{border-radius:16px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .hero-visual{opacity:1;transform:none;animation:none}
+    .hero-float{animation:none}
+    .hero-tilt{transition:none;transform:none}
+  }
+  /* /HERO IMAGE — ADDED */
   .stat{background:var(--bg2);padding:24px 20px;transition:background 0.2s}
   .stat:hover{background:var(--bg3)}
   .stat-num{font-family:'DM Serif Display',serif;font-size:30px;color:var(--accent);letter-spacing:-0.01em}
@@ -224,7 +272,9 @@
     .skills-grid,.projects-grid{grid-template-columns:1fr}
   }
 
-  /* HERO LAYOUT (photo-free, centered) */
+  /* HERO LAYOUT — base rules kept as-is for mobile (centered, stacked).
+     Desktop override (left-aligned, side-by-side with image) lives in
+     the HERO IMAGE block above via ".hero-grid .hero-center". */
   .hero-center{max-width:720px;margin:0 auto 60px;text-align:center;display:flex;flex-direction:column;align-items:center}
   .hero-center .hero-tag{margin-left:auto;margin-right:auto}
   .hero-center .hero-sub{margin-left:auto;margin-right:auto}
@@ -588,6 +638,7 @@ body::before{
 <!-- HERO -->
 <section id="hero">
   <div class="inner">
+    <div class="hero-grid"><!-- HERO IMAGE — ADDED: grid wrapper (text left / image right on desktop) -->
     <div class="hero-center">
     <div class="hero-tag">
       <span class="hero-dot"></span>
@@ -604,6 +655,25 @@ body::before{
       <a href="#experience" class="btn-ghost">View My Work</a>
     </div>
     </div><!-- /hero-center -->
+
+    <!-- HERO IMAGE — ADDED: layered so float (CSS) / tilt+parallax (JS) / entrance (CSS) never fight over the same transform -->
+    <div class="hero-visual" id="heroVisual">
+      <div class="hero-float">
+        <div class="hero-tilt" id="heroTilt">
+          <img
+            src="assets/A16_banner.jpg"
+            alt="Close-up render of a semiconductor chip die glowing on a circuit board"
+            class="hero-img"
+            width="1920" height="520"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- /HERO IMAGE — ADDED -->
+
+    </div><!-- /hero-grid -->
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">9.35</div><div class="stat-label">B.Tech CGPA (NIT DGP)</div></div>
       <div class="stat"><div class="stat-num">3×</div><div class="stat-label">Gold Medal recipient</div></div>
@@ -1121,6 +1191,53 @@ body::before{
     document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current);});
   });
   document.getElementById('hamburger').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')toggleMenu();});
+
+  // ════════════════════════════════════════════════════════════
+  // HERO IMAGE — ADDED: mouse-follow tilt + hover scale + scroll
+  // parallax. Float and fade-in live purely in CSS (heroFloat /
+  // heroVisualIn keyframes above); this only ever writes to the
+  // innermost .hero-tilt layer so it can't fight those animations.
+  // transform-only, rAF-eased, skipped entirely under
+  // prefers-reduced-motion.
+  // ════════════════════════════════════════════════════════════
+  (function initHeroVisual(){
+    const visual=document.getElementById('heroVisual');
+    const tilt=document.getElementById('heroTilt');
+    if(!visual||!tilt) return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let hovering=false;
+    let rotX=0,rotY=0,parY=0,targetRotX=0,targetRotY=0,targetParY=0;
+
+    function frame(){
+      rotX+=(targetRotX-rotX)*0.12;
+      rotY+=(targetRotY-rotY)*0.12;
+      parY+=(targetParY-parY)*0.12;
+      const scale=hovering?1.03:1;
+      tilt.style.transform=`perspective(900px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(${parY.toFixed(2)}px) scale(${scale})`;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    visual.addEventListener('mousemove',e=>{
+      const r=visual.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-0.5;
+      const py=(e.clientY-r.top)/r.height-0.5;
+      targetRotY=px*8;
+      targetRotX=-py*8;
+    });
+    visual.addEventListener('mouseenter',()=>{hovering=true});
+    visual.addEventListener('mouseleave',()=>{hovering=false;targetRotX=0;targetRotY=0;});
+
+    function onScroll(){
+      const r=visual.getBoundingClientRect();
+      const vh=window.innerHeight||document.documentElement.clientHeight;
+      const progress=(vh/2-(r.top+r.height/2))/vh;
+      targetParY=progress*14; // very subtle parallax
+    }
+    window.addEventListener('scroll',onScroll,{passive:true});
+    onScroll();
+  })();
 
   // ════════════════════════════════════════════════════════════
   // CONTACT FORM — validation, auto-resize, EmailJS submission
