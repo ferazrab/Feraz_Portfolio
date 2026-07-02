@@ -115,6 +115,9 @@
   .skill-tags{display:flex;flex-wrap:wrap;gap:7px}
   .tag{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:4px 10px;border-radius:100px;letter-spacing:0.02em;transition:all 0.2s;cursor:default}
   .tag:hover{background:var(--accent-light);border-color:var(--accent-mid);color:var(--accent)}
+  /* Certification pills double as download links — identical look to .tag, just an interactive cursor + focus ring */
+  .tag-download{cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+  .tag-download:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 
   /* EXPERIENCE */
   #experience{border-bottom:1px solid var(--border);background:var(--bg)}
@@ -644,10 +647,10 @@ body::before{
         </div>
         <div style="margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px">
           <div style="font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:10px">Certifications</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px">
-            <span class="tag" style="color:var(--accent);border-color:var(--accent-mid);background:var(--accent-light)">Six Sigma Yellow Belt</span>
-            <span class="tag">Kennesaw State University</span>
-            <span class="tag">OPJEMS Scholar 2022</span>
+          <div class="cert-pills" style="display:flex;flex-wrap:wrap;gap:8px">
+            <a href="#" download class="tag tag-download" style="color:var(--accent);border-color:var(--accent-mid);background:var(--accent-light)" data-cert="six-sigma" aria-label="Download Six Sigma Yellow Belt certificate">Six Sigma Yellow Belt</a>
+            <a href="#" download class="tag tag-download" data-cert="kennesaw" aria-label="Download Kennesaw State University certificate">Kennesaw State University</a>
+            <a href="#" download class="tag tag-download" data-cert="opjems" aria-label="Download OPJEMS Scholar 2022 certificate">OPJEMS Scholar 2022</a>
           </div>
         </div>
       </div>
@@ -1121,6 +1124,38 @@ body::before{
     document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current);});
   });
   document.getElementById('hamburger').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')toggleMenu();});
+
+  // ════════════════════════════════════════════════════════════
+  // CERTIFICATION DOWNLOADS — single config, no per-cert logic.
+  // To add a new certificate: add a pill in the HTML with a
+  // matching data-cert key, then add one line below pointing to
+  // its file in assets/certificates/. Nothing else needs to change.
+  // ════════════════════════════════════════════════════════════
+  (function initCertificateDownloads(){
+    const CERT_FILES = {
+      'six-sigma': 'assets/certificates/six-sigma-yellow-belt.pdf',
+      'kennesaw':  'assets/certificates/kennesaw-state-university.pdf',
+      'opjems':    'assets/certificates/opjems-scholar-2022.pdf'
+    };
+
+    document.querySelectorAll('.tag-download[data-cert]').forEach(el => {
+      const key  = el.dataset.cert;
+      const file = CERT_FILES[key];
+
+      if (!file) {
+        console.warn(`[Certificates] No file configured for data-cert="${key}"`);
+        el.removeAttribute('href');
+        el.setAttribute('aria-disabled', 'true');
+        el.style.pointerEvents = 'none';
+        el.style.opacity = '0.5';
+        return;
+      }
+
+      el.setAttribute('href', file);
+      el.setAttribute('download', file.split('/').pop()); // forces download w/ original filename, never a new tab
+      el.removeAttribute('target'); // guarantee no _blank ever sneaks in
+    });
+  })();
 
   // ════════════════════════════════════════════════════════════
   // CONTACT FORM — validation, auto-resize, EmailJS submission
