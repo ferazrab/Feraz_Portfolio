@@ -498,8 +498,17 @@ body::before{
 /* 3. Ensure all real page content still paints above the ambient
       layer (which sits at z-index:0, behind it, inside body's own
       stacking context). Nothing here changes layout — only paint
-      order. */
-nav, .mobile-menu,
+      order.
+      REMOVED: "nav, .mobile-menu," from this selector. That was the
+      actual root cause of the navbar scrolling away — this rule ran
+      AFTER the nav{position:fixed} rule earlier in the stylesheet,
+      and with equal specificity (single-element selector vs
+      single-element selector), the later rule wins the cascade,
+      silently flipping the navbar back to position:relative. nav and
+      .mobile-menu don't need this rule anyway: they're already
+      position:fixed with z-index:100/99, which puts them in their
+      own stacking context above the z-index:0 ambient layer with no
+      help needed. */
 #hero > *, #about > *, #education > *, #skills > *,
 #experience > *, #projects > *, #achievements > *,
 #publications > *, #media > *, #contact > *{
