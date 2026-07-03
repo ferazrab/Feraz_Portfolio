@@ -615,6 +615,159 @@ body::before{
   .cert-modal{width:96vw;height:88vh;border-radius:12px}
   .cert-modal-close{width:32px;height:32px;font-size:18px;top:8px;right:8px}
 }
+
+/* ════════════════════════════════════════════════════════════
+   RESUME DUAL-ACTION COMPONENT
+   Replaces the single .btn-download anchor in Hero + Contact.
+   ════════════════════════════════════════════════════════════ */
+
+/* Wrapper that holds Preview + Download side-by-side */
+.resume-actions{
+  display:inline-flex;
+  align-items:stretch;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(37,160,90,0.28);
+  transition:box-shadow 0.25s;
+}
+.resume-actions:hover{
+  box-shadow:0 12px 32px rgba(37,160,90,0.42);
+}
+
+/* Shared base for both halves */
+.resume-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  color:#fff;
+  font-size:13px;
+  font-weight:600;
+  padding:13px 22px;
+  letter-spacing:0.02em;
+  border:none;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:filter 0.18s,transform 0.15s;
+  text-decoration:none;
+  line-height:1;
+  white-space:nowrap;
+}
+.resume-btn svg{width:15px;height:15px;flex-shrink:0;transition:transform 0.2s}
+.resume-btn:hover{filter:brightness(1.08)}
+.resume-btn:active{transform:scale(0.97)}
+
+/* Thin divider between the two halves */
+.resume-btn-divider{
+  width:1px;
+  background:rgba(255,255,255,0.22);
+  flex-shrink:0;
+  align-self:stretch;
+}
+
+/* Preview side: icon nudges up on hover */
+.resume-btn--preview:hover svg{transform:translateY(-1px)}
+
+/* Download side: icon nudges down on hover (classic download motion) */
+.resume-btn--download:hover svg{transform:translateY(2px)}
+
+/* ── RESUME PREVIEW MODAL ── */
+.resume-modal-overlay{
+  position:fixed;inset:0;z-index:210;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  background:rgba(8,8,8,0.82);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0;visibility:hidden;
+  transition:opacity 0.3s ease,visibility 0s linear 0.3s;
+}
+.resume-modal-overlay.open{
+  opacity:1;visibility:visible;
+  transition:opacity 0.3s ease;
+}
+.resume-modal{
+  position:relative;
+  width:min(860px,96vw);
+  height:min(94vh,1200px);
+  background:var(--bg2);
+  border-radius:16px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.5),0 2px 12px rgba(0,0,0,0.22);
+  overflow:hidden;
+  transform:scale(0.93) translateY(10px);
+  opacity:0;
+  transition:transform 0.34s cubic-bezier(.2,.9,.25,1),opacity 0.3s ease;
+  display:flex;flex-direction:column;
+}
+.resume-modal-overlay.open .resume-modal{
+  transform:scale(1) translateY(0);opacity:1;
+}
+/* Toolbar strip at top of modal */
+.resume-modal-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px 10px 18px;
+  background:var(--ink);
+  flex-shrink:0;
+  gap:12px;
+}
+.resume-modal-title{
+  font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.75);
+  letter-spacing:0.04em;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.resume-modal-toolbar-actions{
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+/* Download button inside the modal toolbar */
+.resume-modal-dl{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));
+  color:#fff;border:none;border-radius:6px;
+  font-size:12px;font-weight:600;letter-spacing:0.03em;
+  padding:7px 14px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:filter 0.18s;text-decoration:none;line-height:1;
+}
+.resume-modal-dl:hover{filter:brightness(1.1)}
+.resume-modal-dl svg{width:13px;height:13px;flex-shrink:0}
+/* Close button */
+.resume-modal-close{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,0.1);color:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;line-height:1;cursor:pointer;
+  transition:background 0.2s,transform 0.15s;flex-shrink:0;
+}
+.resume-modal-close:hover{background:rgba(255,255,255,0.2);transform:scale(1.06)}
+.resume-modal-close:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+/* PDF frame area */
+.resume-modal-body{
+  position:relative;flex:1;min-height:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg3);
+}
+.resume-modal-body iframe{
+  display:block;width:100%;height:100%;border:none;
+  background:var(--bg3);opacity:0;transition:opacity 0.25s;
+}
+.resume-modal-body iframe.loaded{opacity:1}
+.resume-modal-loading{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted2);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;
+  pointer-events:none;
+}
+
+@media(max-width:600px){
+  .resume-modal{width:98vw;height:92vh;border-radius:12px}
+  .resume-modal-toolbar{padding:9px 12px}
+  .resume-modal-title{font-size:11px}
+  .resume-modal-dl span{display:none} /* icon-only on very small screens */
+  .resume-btn{padding:12px 16px;font-size:12px}
+}
+@media(max-width:380px){
+  .resume-actions{flex-direction:column}
+  .resume-btn-divider{width:auto;height:1px}
+}
 </style>
 </head>
 <body>
@@ -666,10 +819,17 @@ body::before{
     <p class="hero-sub">M.Tech candidate at IISc–NTU. Building next-gen devices at the intersection of 2D materials, nanoelectronics, and cleanroom fabrication.</p>
     <div class="hero-actions">
       <button class="btn-primary" onclick="scrollToContact()">Get in Touch</button>
-      <a href="assets/Feraz_Rab_Resume.pdf" download="Feraz_Rab_Resume.pdf" class="btn-download" title="Download Resume (PDF)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download Resume
-      </a>
+      <!-- REPLACED: single .btn-download → dual Preview + Download resume component -->
+      <div class="resume-actions" data-resume-path="assets/Feraz_Rab_Resume.pdf">
+        <button type="button" class="resume-btn resume-btn--preview" onclick="openResumeModal()" aria-label="Preview Resume">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Preview Resume
+        </button>
+        <div class="resume-btn-divider" aria-hidden="true"></div>
+        <a href="assets/Feraz_Rab_Resume.pdf" download="Feraz_Rab_Resume.pdf" class="resume-btn resume-btn--download" title="Download Resume PDF" aria-label="Download Resume">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </a>
+      </div>
       <a href="#experience" class="btn-ghost">View My Work</a>
     </div>
     </div><!-- /hero-center -->
@@ -1036,11 +1196,18 @@ body::before{
           <div class="contact-status-line2">Fabs &bull; Foundries &bull; OEMs &bull; OSAT/ATMP &bull; Semiconductor R&amp;D</div>
         </div>
 
-        <!-- Resume CTA (recruiter-facing, downloads the attached PDF directly) -->
-        <a href="assets/Feraz_Rab_Resume.pdf" download="Feraz_Rab_Resume.pdf" class="btn-download" title="Download Resume (PDF)" style="margin-bottom:32px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download Resume
-        </a>
+        <!-- REPLACED: single .btn-download → dual Preview + Download resume component -->
+        <div class="resume-actions" data-resume-path="assets/Feraz_Rab_Resume.pdf" style="margin-bottom:32px">
+          <button type="button" class="resume-btn resume-btn--preview" onclick="openResumeModal()" aria-label="Preview Resume">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Preview Resume
+          </button>
+          <div class="resume-btn-divider" aria-hidden="true"></div>
+          <a href="assets/Feraz_Rab_Resume.pdf" download="Feraz_Rab_Resume.pdf" class="resume-btn resume-btn--download" title="Download Resume PDF" aria-label="Download Resume">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </a>
+        </div>
 
         <div class="contact-links">
           <a href="mailto:ferazrab98@gmail.com" class="contact-link" title="Send email">
@@ -1155,6 +1322,25 @@ body::before{
     <button type="button" class="cert-modal-close" id="certModalClose" aria-label="Close certificate preview">&times;</button>
     <div class="cert-modal-body" id="certModalBody">
       <div class="cert-modal-loading" id="certModalLoading">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADDED: Resume preview modal — single reusable instance, shared by all resume-actions components -->
+<div class="resume-modal-overlay" id="resumeModalOverlay" role="dialog" aria-modal="true" aria-label="Resume preview" aria-hidden="true">
+  <div class="resume-modal" id="resumeModal">
+    <div class="resume-modal-toolbar">
+      <span class="resume-modal-title">Feraz Rab — Resume</span>
+      <div class="resume-modal-toolbar-actions">
+        <a id="resumeModalDl" href="assets/Feraz_Rab_Resume.pdf" download="Feraz_Rab_Resume.pdf" class="resume-modal-dl" title="Download PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download</span>
+        </a>
+        <button type="button" class="resume-modal-close" id="resumeModalClose" aria-label="Close resume preview">&times;</button>
+      </div>
+    </div>
+    <div class="resume-modal-body" id="resumeModalBody">
+      <div class="resume-modal-loading" id="resumeModalLoading">Loading…</div>
     </div>
   </div>
 </div>
@@ -1288,6 +1474,90 @@ body::before{
 
     // Disable right-click inside the modal only
     modal.addEventListener('contextmenu', e => e.preventDefault());
+  })();
+
+  // ════════════════════════════════════════════════════════════
+  // RESUME PREVIEW MODAL
+  // ADDED: one reusable modal for the Preview Resume button that
+  // appears in both the Hero and Contact sections.
+  // Path is sourced from RESUME_PATH constant defined once here.
+  // openResumeModal() is called by the onclick on each preview btn.
+  // ════════════════════════════════════════════════════════════
+  const RESUME_PATH = 'assets/Feraz_Rab_Resume.pdf'; // ← single source of truth
+
+  (function initResumeModal(){
+    const overlay    = document.getElementById('resumeModalOverlay');
+    const modal      = document.getElementById('resumeModal');
+    const body       = document.getElementById('resumeModalBody');
+    const loading    = document.getElementById('resumeModalLoading');
+    const closeBtn   = document.getElementById('resumeModalClose');
+    if (!overlay || !modal || !body || !closeBtn) return;
+
+    let lastFocused   = null;
+    let iframeInjected = false; // lazy-load: inject the PDF frame only once
+
+    // Focusable elements inside the modal for focus-trap
+    function getFocusable(){
+      return Array.from(modal.querySelectorAll(
+        'a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])'
+      )).filter(el => !el.closest('[aria-hidden="true"]'));
+    }
+
+    function trapFocus(e){
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first){
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last){
+        e.preventDefault(); first.focus();
+      }
+    }
+
+    function injectPdfFrame(){
+      if (iframeInjected) return; // already done
+      const iframe = document.createElement('iframe');
+      iframe.src   = `${RESUME_PATH}#view=FitH`;
+      iframe.title = 'Resume PDF';
+      iframe.setAttribute('aria-label', 'Resume PDF viewer');
+      iframe.addEventListener('load', () => {
+        loading.style.display = 'none';
+        iframe.classList.add('loaded');
+      });
+      body.appendChild(iframe);
+      iframeInjected = true;
+    }
+
+    window.openResumeModal = function openResumeModal(){
+      injectPdfFrame();
+      lastFocused = document.activeElement;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden'; // prevent background scroll
+      closeBtn.focus();
+      document.addEventListener('keydown', handleKey);
+    };
+
+    function closeResumeModal(){
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleKey);
+      if (lastFocused) lastFocused.focus();
+    }
+
+    function handleKey(e){
+      if (e.key === 'Escape') { closeResumeModal(); return; }
+      if (e.key === 'Tab')    { trapFocus(e); }
+    }
+
+    closeBtn.addEventListener('click', closeResumeModal);
+
+    // Click on the dark backdrop (outside the modal card) closes it
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeResumeModal();
+    });
   })();
 
   // ════════════════════════════════════════════════════════════
