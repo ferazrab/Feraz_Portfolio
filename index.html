@@ -340,33 +340,44 @@
   .hero-center .hero-sub{margin-left:auto;margin-right:auto}
   .hero-center .hero-actions{justify-content:center;margin-bottom:0}
 
-  /* EDUCATION TIMELINE */
+  /* EDUCATION */
   #education{border-bottom:1px solid var(--border);background:rgba(246,248,252,0.6)}
-  .edu-timeline{display:flex;flex-direction:column;gap:0}
-  .edu-tl-item{display:grid;grid-template-columns:104px 1fr;gap:30px;align-items:start;padding:38px 0;border-bottom:1px solid var(--border)}
-  .edu-tl-item:last-child{border-bottom:none;padding-bottom:0}
-  .edu-tl-item:first-child{padding-top:0}
-  .edu-tl-left{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:4px}
-  .edu-tl-logos{display:flex;align-items:center;gap:6px}
-  .edu-logo-badge{background:var(--ink);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:0.06em;padding:9px 11px;border-radius:10px;text-align:center;line-height:1.2;min-width:40px;box-shadow:var(--shadow-sm);transition:transform 0.3s var(--ease)}
-  .edu-tl-item:hover .edu-logo-badge{transform:translateY(-3px)}
-  .edu-logo-badge.ntu{background:linear-gradient(135deg,#12D48E,#0A9468)}
-  .edu-logo-badge.nitdgp{background:linear-gradient(135deg,#7B4DFF,#4B2BC4);font-size:9.5px;padding:9px 11px;line-height:1.3}
-  .edu-logo-plus{font-size:12px;color:var(--muted2);font-weight:800}
-  .edu-tl-body{display:flex;flex-direction:column;gap:14px}
+  .edu-timeline{display:flex;flex-direction:column;gap:26px}
+  .edu-tl-item{position:relative;overflow:hidden;display:grid;grid-template-columns:96px 1fr;gap:34px;align-items:start;background:var(--glass-strong);border:1px solid var(--border);border-radius:24px;padding:36px;box-shadow:var(--shadow-sm);transition:border-color 0.3s,box-shadow 0.3s}
+  .edu-tl-item::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--grad);opacity:0.35}
+  .edu-tl-item--current{border-color:var(--accent-mid);box-shadow:var(--shadow-md)}
+  .edu-tl-item--current::before{opacity:1}
+  .edu-tl-item:hover{border-color:var(--accent-mid);box-shadow:var(--shadow-md)}
+  .edu-tl-left{display:flex;justify-content:center}
+  .edu-tl-logos{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .edu-tl-logos .af-logo{width:84px;height:84px;padding:10px;border-radius:18px}
+  .af-logo b{text-align:center;line-height:1.25}
+  .edu-logo-plus{font-size:14px;color:var(--muted2);font-weight:800;line-height:1}
+  .edu-tl-body{display:flex;flex-direction:column;gap:18px;min-width:0}
   .edu-tl-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-  .edu-tl-inst{font-size:16px;font-weight:800;color:var(--ink);line-height:1.35}
-  .edu-tl-sub{font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:500}
-  .edu-tl-date{font-size:11.5px;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent-mid);padding:4px 13px;border-radius:100px;white-space:nowrap;flex-shrink:0;font-weight:700;letter-spacing:0.02em}
-  .edu-tl-degree{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:700;color:var(--ink3);flex-wrap:wrap}
+  .edu-tl-inst{font-size:clamp(16px,1.8vw,19px);font-weight:800;color:var(--ink);line-height:1.35}
+  .edu-tl-sub{font-size:13px;color:var(--muted);margin-top:4px;font-weight:500}
+  .edu-tl-date{font-size:12px;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent-mid);padding:5px 14px;border-radius:100px;white-space:nowrap;flex-shrink:0;font-weight:700;letter-spacing:0.02em}
+  .edu-tl-degree{display:flex;align-items:center;gap:12px;font-size:15.5px;font-weight:700;color:var(--ink3);flex-wrap:wrap}
   .edu-degree-chip{background:var(--grad);color:#fff;font-size:10px;font-weight:800;padding:4px 11px;border-radius:100px;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0}
-  .edu-tl-tags{display:flex;flex-wrap:wrap;gap:8px}
-  .edu-tag{background:var(--bg);border:1px solid var(--border);color:var(--muted);font-size:11.5px;font-weight:500;padding:4px 11px;border-radius:100px;transition:all 0.2s}
-  .edu-tag:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-light)}
-  .edu-tl-note{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--muted);line-height:1.7;background:var(--glass-strong);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:0 10px 10px 0;padding:11px 15px}
-  .edu-tl-note svg{flex-shrink:0;margin-top:2px;stroke:var(--accent2)}
-  .edu-tl-medal{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:800;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent-mid);padding:9px 15px;border-radius:10px;width:fit-content}
+  .edu-now{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;letter-spacing:0.03em;color:var(--violet);background:#F1ECFF;border:1px solid rgba(123,77,255,0.25);padding:5px 13px;border-radius:100px}
+  .edu-tl-medals{display:flex;flex-wrap:wrap;gap:10px}
+  .edu-tl-medal{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:800;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent-mid);padding:9px 16px;border-radius:12px}
   .edu-tl-medal svg{flex-shrink:0;stroke:var(--accent)}
+  .edu-courses{margin-top:6px}
+  .edu-courses-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;color:var(--ink2);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px}
+  .edu-courses-label span{color:var(--muted2);font-weight:700}
+  .edu-courses-label::after{content:'';flex:1;height:1px;background:var(--border)}
+  .edu-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .cg{--c:var(--accent2);background:rgba(255,255,255,0.8);border:1px solid var(--border);border-left:3px solid var(--c);border-radius:14px;padding:16px 18px;transition:transform 0.3s var(--ease),box-shadow 0.3s}
+  .cg:nth-child(2){--c:var(--cyan)}
+  .cg:nth-child(3){--c:var(--violet)}
+  .cg:nth-child(4){--c:var(--pink)}
+  .cg:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .cg-title{font-size:12px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink);margin-bottom:10px}
+  .cg ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .cg li{position:relative;padding-left:16px;font-size:14px;line-height:1.5;font-weight:500;color:var(--ink3)}
+  .cg li::before{content:'';position:absolute;left:0;top:0.72em;width:7px;height:2px;border-radius:2px;background:var(--c)}
 
   /* ════ AMBIENT BACKGROUND — vibrant colour-graded aurora, drifts slowly ════ */
   body{position:relative}
@@ -484,11 +495,20 @@
     .tl-item{padding:18px 18px}
     .cf-toast{top:74px}
   }
+  @media(max-width:900px){
+    .edu-tl-item{grid-template-columns:1fr;gap:20px;padding:28px 24px}
+    .edu-tl-left{justify-content:flex-start}
+    .edu-tl-logos{flex-direction:row;gap:10px}
+    .edu-tl-logos .af-logo{width:64px;height:64px;padding:8px;border-radius:14px}
+  }
   @media(max-width:680px){
-    .edu-tl-item{grid-template-columns:1fr;gap:16px;padding:30px 0}
-    .edu-tl-left{flex-direction:row;justify-content:flex-start}
-    .edu-tl-header{flex-direction:column;gap:8px}
+    .edu-tl-header{flex-direction:column;gap:10px}
     .edu-tl-date{align-self:flex-start}
+    .edu-course-grid{grid-template-columns:1fr}
+    .edu-tl-item{padding:24px 18px;border-radius:20px}
+    .edu-tl-medal{font-size:12.5px;padding:8px 13px}
+    .cg{padding:14px 16px}
+    .cg li{font-size:14.5px}
   }
   @media(max-width:600px){
     .proj-card--featured{padding:24px 20px}
@@ -642,12 +662,12 @@
     <div class="edu-timeline">
 
       <!-- IISc + NTU -->
-      <div class="edu-tl-item">
+      <div class="edu-tl-item edu-tl-item--current">
         <div class="edu-tl-left">
           <div class="edu-tl-logos">
-            <div class="edu-logo-badge">IISc</div>
+            <span class="af-logo"><img src="assets/logos/iisc.png" alt="Indian Institute of Science logo" width="64" height="64" loading="lazy" decoding="async" onerror="this.parentNode.classList.add('no-logo');this.remove()"/><b>IISc</b></span>
             <div class="edu-logo-plus">×</div>
-            <div class="edu-logo-badge ntu">NTU</div>
+            <span class="af-logo"><img src="assets/logos/ntu.png" alt="National Taiwan University logo" width="64" height="64" loading="lazy" decoding="async" onerror="this.parentNode.classList.add('no-logo');this.remove()"/><b>NTU</b></span>
           </div>
         </div>
         <div class="edu-tl-body">
@@ -661,17 +681,42 @@
           <div class="edu-tl-degree">
             <span class="edu-degree-chip">M.Tech</span>
             Semiconductor Technology
+            <span class="edu-now"><span class="hero-dot"></span>Currently at NTU, Taipei</span>
           </div>
-          <div class="edu-tl-tags">
-            <span class="edu-tag">2D Materials</span>
-            <span class="edu-tag">Nanoelectronics</span>
-            <span class="edu-tag">Cleanroom Fabrication</span>
-            <span class="edu-tag">Device Physics</span>
-            <span class="edu-tag">Process Integration</span>
-          </div>
-          <div class="edu-tl-note">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            Pursuing research across two world-class institutions — IISc (India) and NTU (Taiwan) — with hands-on access to advanced semiconductor fabrication facilities.
+          <div class="edu-courses">
+            <div class="edu-courses-label">Relevant coursework <span>· 10 courses</span></div>
+            <div class="edu-course-grid">
+              <div class="cg">
+                <div class="cg-title">Devices &amp; Materials</div>
+                <ul>
+                  <li>Semiconductor Device Physics</li>
+                  <li>Materials Synthesis: Quantum Dots to Bulk Crystals</li>
+                </ul>
+              </div>
+              <div class="cg">
+                <div class="cg-title">Fabrication &amp; Process</div>
+                <ul>
+                  <li>Advanced Micro &amp; Nanofabrication Technology and Process</li>
+                  <li>Semiconductor Process Integration</li>
+                  <li>Advanced Technologies for Semiconductor and Display</li>
+                </ul>
+              </div>
+              <div class="cg">
+                <div class="cg-title">Characterization</div>
+                <ul>
+                  <li>Basic to Advanced Spectroscopy Techniques</li>
+                  <li>Theory of Structural &amp; Functional Characterization</li>
+                  <li>Semiconductor Material &amp; Device Characterization</li>
+                </ul>
+              </div>
+              <div class="cg">
+                <div class="cg-title">Industry &amp; Applications</div>
+                <ul>
+                  <li>A Comprehensive View of the Semiconductor Industry: Experience and Practicality</li>
+                  <li>Solar PV Manufacturing and Packaging</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -680,7 +725,7 @@
       <div class="edu-tl-item">
         <div class="edu-tl-left">
           <div class="edu-tl-logos">
-            <div class="edu-logo-badge nitdgp">NIT<br/>DGP</div>
+            <span class="af-logo"><img src="assets/logos/nitdgp.png" alt="NIT Durgapur logo" width="64" height="64" loading="lazy" decoding="async" onerror="this.parentNode.classList.add('no-logo');this.remove()"/><b>NIT<br/>DGP</b></span>
           </div>
         </div>
         <div class="edu-tl-body">
@@ -689,21 +734,56 @@
               <div class="edu-tl-inst">National Institute of Technology, Durgapur</div>
               <div class="edu-tl-sub">West Bengal, India</div>
             </div>
-            <span class="edu-tl-date">Dec 2020 – May 2024</span>
+            <span class="edu-tl-date">Jun 2020 – May 2024</span>
           </div>
           <div class="edu-tl-degree">
             <span class="edu-degree-chip">B.Tech</span>
             Metallurgical &amp; Materials Engineering
           </div>
-          <div class="edu-tl-tags">
-            <span class="edu-tag">Materials Science</span>
-            <span class="edu-tag">Thermodynamics</span>
-            <span class="edu-tag">Phase Transformations</span>
-            <span class="edu-tag">Characterization</span>
+          <div class="edu-tl-medals">
+            <div class="edu-tl-medal">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+              Institute Gold Medal
+            </div>
+            <div class="edu-tl-medal">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+              Department Gold Medal
+            </div>
           </div>
-          <div class="edu-tl-medal">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-            Institute Gold Medal &nbsp;·&nbsp; Highest CGPA in Metallurgical &amp; Materials Engineering
+          <div class="edu-courses">
+            <div class="edu-courses-label">Relevant coursework <span>· 10 courses</span></div>
+            <div class="edu-course-grid">
+              <div class="cg">
+                <div class="cg-title">Core Metallurgy</div>
+                <ul>
+                  <li>Materials Science &amp; Engineering</li>
+                  <li>Metallurgy</li>
+                  <li>Iron &amp; Steel Making</li>
+                </ul>
+              </div>
+              <div class="cg">
+                <div class="cg-title">Processing &amp; Properties</div>
+                <ul>
+                  <li>Heat Treatment of Materials</li>
+                  <li>Plastic Deformation &amp; Strengthening of Materials</li>
+                </ul>
+              </div>
+              <div class="cg">
+                <div class="cg-title">Science &amp; Analysis</div>
+                <ul>
+                  <li>Thermodynamics &amp; Kinetics</li>
+                  <li>Materials Characterization</li>
+                </ul>
+              </div>
+              <div class="cg">
+                <div class="cg-title">Management &amp; Computing</div>
+                <ul>
+                  <li>Economics &amp; Management Accountancy</li>
+                  <li>Principles of Management</li>
+                  <li>Introduction to Computing &amp; Data Structures</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
