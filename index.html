@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Feraz Rab – Semiconductor Engineer & Researcher. M.Tech (IISc–NTU) working on 2D materials, nanoelectronics and cleanroom fabrication."/>
 <meta name="theme-color" content="#0B1020"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Feraz Rab – Semiconductor Engineer &amp; Researcher"/>
+<meta property="og:description" content="M.Tech (IISc–NTU) working on ALD high-k dielectrics, 2D materials and cleanroom fabrication."/>
+<meta name="color-scheme" content="light"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230B1020'/%3E%3Ctext x='32' y='44' font-size='34' font-family='Georgia,serif' font-weight='700' text-anchor='middle' fill='%2312D48E'%3EF%3C/text%3E%3C/svg%3E"/>
 <title>Feraz Rab – Semiconductor Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -121,53 +126,23 @@
 
   /* ABOUT */
   #about{border-bottom:1px solid var(--border)}
-  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-  .about-text p{color:var(--muted);font-size:15.5px;line-height:1.85;margin-bottom:18px}
+  .about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center}
+  .about-text p{color:var(--muted);font-size:16px;line-height:1.85;margin-bottom:18px}
   .about-text p:last-child{margin-bottom:0}
   .about-text strong{color:var(--ink);font-weight:700}
-  .edu-card{background:var(--glass-strong);border:1px solid var(--border);border-radius:16px;padding:22px 24px;margin-bottom:14px;position:relative;overflow:hidden;transition:border-color 0.25s,transform 0.3s var(--ease),box-shadow 0.3s;box-shadow:var(--shadow-sm)}
-  .edu-card:hover{border-color:var(--accent-mid);transform:translateY(-3px);box-shadow:var(--shadow-md)}
-  .edu-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#12D48E,#7B4DFF)}
-  .edu-inst{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:3px}
-  .edu-deg{font-size:12.5px;color:var(--muted);margin-bottom:9px}
-  .edu-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
-  .edu-cgpa{font-size:13px;color:var(--accent);font-weight:800}
-  .edu-year{font-size:11.5px;color:var(--muted2);font-weight:500}
-
-  /* ABOUT — redesigned */
-  .about-grid{align-items:start}
-  .about-lead{font-size:clamp(17px,1.9vw,19px) !important;line-height:1.7 !important;color:var(--ink2) !important}
-  .about-text p{font-size:16px}
+  .about-text .about-lead{font-size:clamp(17px,1.9vw,19px);line-height:1.7;color:var(--ink2)}
   mark.hl{background:linear-gradient(120deg,rgba(18,212,142,0.28),rgba(123,77,255,0.22));color:var(--ink);font-weight:800;padding:1px 7px;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-  .about-affil{list-style:none;margin:0 0 20px;display:flex;flex-direction:column;gap:14px}
-  .about-affil li{display:flex;gap:14px;align-items:flex-start}
-  .af-k{flex-shrink:0;min-width:56px;text-align:center;font-size:11px;font-weight:800;letter-spacing:0.06em;color:#fff;background:var(--ink);padding:7px 8px;border-radius:9px;margin-top:2px}
-  .about-affil li:nth-child(2) .af-k{background:linear-gradient(135deg,#12D48E,#0A9468)}
-  .af-v{font-size:14.5px;color:var(--ink2);line-height:1.5}
+  .about-affil{list-style:none;display:flex;flex-direction:column;gap:16px}
+  .about-affil li{position:relative;overflow:hidden;display:flex;gap:18px;align-items:center;background:var(--glass-strong);border:1px solid var(--border);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow-sm);transition:border-color 0.25s,transform 0.3s var(--ease),box-shadow 0.3s}
+  .about-affil li::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#12D48E,#7B4DFF)}
+  .about-affil li:hover{border-color:var(--accent-mid);transform:translateY(-3px);box-shadow:var(--shadow-md)}
+  .af-logo{flex-shrink:0;width:68px;height:68px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);border-radius:14px;padding:7px;box-shadow:var(--shadow-sm)}
+  .af-logo img{display:block;width:100%;height:100%;object-fit:contain}
+  .af-logo b{display:none;font-size:12px;font-weight:800;letter-spacing:0.06em;color:var(--ink)}
+  .af-logo.no-logo b{display:block}
+  .af-v{font-size:15px;color:var(--ink2);line-height:1.55}
+  .af-v strong{color:var(--ink);font-weight:800}
   .af-v small{font-size:12.5px;color:var(--muted);font-weight:500}
-  .thesis-card{position:relative;overflow:hidden;background:var(--glass-strong);border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:var(--shadow-md);transition:box-shadow 0.35s,transform 0.35s var(--ease),border-color 0.25s}
-  .thesis-card:hover{box-shadow:var(--shadow-lg);border-color:var(--accent-mid);transform:translateY(-3px)}
-  .thesis-card::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--grad)}
-  .thesis-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);border:1px solid var(--accent-mid);color:var(--accent);font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:14px}
-  .thesis-title{font-family:var(--font-display);font-size:clamp(21px,2.4vw,26px);font-weight:500;letter-spacing:-0.02em;line-height:1.2;color:var(--ink);margin-bottom:4px}
-  .thesis-sub{font-size:13.5px;font-weight:700;color:var(--violet);margin-bottom:16px}
-  .thesis-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:20px}
-  .thesis-list li{position:relative;padding-left:24px;font-size:14.5px;line-height:1.6;color:var(--muted)}
-  .thesis-list li::before{content:'';position:absolute;left:0;top:7px;width:10px;height:10px;border-radius:50%;background:var(--grad)}
-  .thesis-list a{color:var(--accent);font-weight:700;border-bottom:1.5px solid var(--accent-mid);transition:color 0.2s,border-color 0.2s}
-  .thesis-list a:hover{color:var(--violet);border-color:var(--violet)}
-  .thesis-skills-label,.about-certs-label{font-size:11px;font-weight:800;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px}
-  .thesis-skills-label{padding-top:18px;border-top:1px solid var(--border)}
-  .about-certs{margin-top:22px;padding:0 4px}
-  @media(max-width:768px){
-    .about-grid{gap:34px}
-    .about-text p{font-size:15.5px}
-    .about-lead{font-size:17px !important}
-    .thesis-card{padding:22px 20px;border-radius:18px}
-    .thesis-list li{font-size:14.5px}
-    .thesis-card .tag,.about-certs .tag{font-size:12px;padding:6px 11px}
-    .af-v{font-size:14px}
-  }
 
   /* SKILLS */
   #skills{border-bottom:1px solid var(--border);background:rgba(246,248,252,0.6)}
@@ -210,6 +185,22 @@
   .proj-desc{font-size:13.5px;color:var(--muted);line-height:1.8}
   .proj-year{font-size:11.5px;color:var(--muted2);margin-top:18px;font-weight:600}
 
+  /* Featured project (thesis) */
+  .proj-card--featured{grid-column:1/-1;padding:32px;border-color:var(--accent-mid);background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(232,250,242,0.9) 60%,rgba(240,236,255,0.9))}
+  .proj-card--featured::after{transform:scaleX(1)}
+  .proj-feat{display:grid;grid-template-columns:1.3fr 1fr;gap:36px;align-items:start}
+  .proj-card--featured .proj-title{font-family:var(--font-display);font-size:clamp(22px,2.6vw,30px);font-weight:500;letter-spacing:-0.02em;line-height:1.2;margin-bottom:6px}
+  .proj-sub{font-size:14px;font-weight:700;color:var(--violet);margin-bottom:18px}
+  .proj-points{list-style:none;display:flex;flex-direction:column;gap:12px}
+  .proj-points li{position:relative;padding-left:24px;font-size:14.5px;line-height:1.7;color:var(--muted)}
+  .proj-points li::before{content:'';position:absolute;left:0;top:8px;width:10px;height:10px;border-radius:50%;background:var(--grad)}
+  .proj-points a{color:var(--accent);font-weight:700;border-bottom:1.5px solid var(--accent-mid);transition:color 0.2s,border-color 0.2s}
+  .proj-points a:hover{color:var(--violet);border-color:var(--violet)}
+  .proj-side{background:rgba(255,255,255,0.72);border:1px solid var(--border);border-radius:16px;padding:20px 22px}
+  .proj-side-label{font-size:11px;font-weight:800;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
+  .proj-tags{display:flex;flex-wrap:wrap;gap:8px}
+  .proj-side .proj-year{margin-top:16px}
+
   /* ACHIEVEMENTS */
   #achievements{border-bottom:1px solid var(--border)}
   .ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
@@ -219,6 +210,13 @@
   .ach-card:hover .ach-icon{transform:scale(1.25) rotate(-8deg)}
   .ach-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:5px}
   .ach-detail{font-size:12.5px;color:var(--muted);line-height:1.7}
+
+  .ach-sub{display:flex;align-items:center;gap:12px;margin:46px 0 18px;font-size:11.5px;font-weight:800;color:var(--accent);letter-spacing:0.16em;text-transform:uppercase}
+  .ach-sub::after{content:'';flex:1;height:1px;background:var(--border)}
+  .ach-cert{width:100%;margin:0;text-align:left;font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+  .ach-cert:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+  .ach-cta{display:inline-block;margin-top:9px;font-size:12px;font-weight:800;color:var(--accent);letter-spacing:0.03em;transition:color 0.2s,transform 0.25s var(--ease)}
+  .ach-cert:hover .ach-cta{color:var(--violet);transform:translateX(4px)}
 
   /* PUBLICATIONS */
   #publications{border-bottom:1px solid var(--border);background:rgba(246,248,252,0.6)}
@@ -459,6 +457,8 @@
     .nav-links{gap:20px}
   }
   @media(max-width:900px){
+    .about-grid{grid-template-columns:1fr;gap:34px}
+    .proj-feat{grid-template-columns:1fr;gap:24px}
     .nav-links{display:none}
     .hamburger{display:flex}
     .contact-grid{grid-template-columns:1fr;gap:28px}
@@ -491,6 +491,10 @@
     .edu-tl-date{align-self:flex-start}
   }
   @media(max-width:600px){
+    .proj-card--featured{padding:24px 20px}
+    .about-affil li{padding:16px 16px;gap:14px}
+    .af-logo{width:58px;height:58px}
+    .af-v{font-size:14px}
     .students-welcome{padding:20px;gap:12px}
     .resume-modal{width:98vw;height:92vh;border-radius:12px}
     .resume-modal-toolbar{padding:9px 12px}
@@ -611,38 +615,20 @@
     <div class="sec-label">About Me</div>
     <div class="about-grid">
       <div class="about-text">
-        <h2 class="sec-title" style="margin-bottom:24px">Fabricating the future,<br/><em>one wafer at a time.</em></h2>
+        <h2 class="sec-title" style="margin-bottom:24px">Extending Moore's Law,<br/><em>one atomic layer at a time.</em></h2>
         <p class="about-lead">I'm a dual-degree Master's student in <strong>Semiconductor Technology</strong> at <mark class="hl">IISc</mark> (India) and <mark class="hl">NTU</mark> (Taiwan). Expected graduation: <strong>July 2027</strong>.</p>
-        <ul class="about-affil">
-          <li><span class="af-k">IISc</span><span class="af-v"><strong>Indian Institute of Science</strong>, Bangalore<br/><small>CeNSE · Centre for Nanoscience &amp; Engineering</small></span></li>
-          <li><span class="af-k">NTU</span><span class="af-v"><strong>National Taiwan University</strong>, Taipei<br/><small>GSAT · Graduate School of Advanced Technology<br/>Device Materials &amp; Heterogeneous Integration</small></span></li>
-        </ul>
         <p>Before this, I completed my <strong>B.Tech in Metallurgical &amp; Materials Engineering</strong> at NIT Durgapur, India (2024), graduating with the <strong>Institute Gold Medal</strong> and the <strong>Department Gold Medal</strong>.</p>
       </div>
-      <div class="about-right">
-        <div class="thesis-card">
-          <span class="thesis-badge"><span class="hero-dot"></span>Currently working on</span>
-          <h3 class="thesis-title">Master's Thesis: ALD High-k Dielectrics</h3>
-          <div class="thesis-sub">Y-doped ZrO₂ · MIM &amp; MOS structures</div>
-          <ul class="thesis-list">
-            <li>Developing ALD process recipes for ZrO₂ films with different yttrium (Y) doping</li>
-            <li>Fabricating MIM and MOS test devices in the <a href="https://sites.google.com/g.ntu.edu.tw/jiunyun/home" target="_blank" rel="noopener">QEL Lab</a> (Prof. Jiun-Yun Li's group, Electrical Engineering, NTU)</li>
-            <li>Analysing C–V and I–V data to evaluate performance for the 7 Å node (TSMC)</li>
-          </ul>
-          <div class="thesis-skills-label">Hands-on cleanroom work</div>
-          <div class="skill-tags">
-            <span class="tag">Photolithography</span><span class="tag">Wet / Dry Etching</span><span class="tag">ALD</span><span class="tag">PVD</span><span class="tag">PECVD</span><span class="tag">Rapid Thermal Annealing</span><span class="tag">Ion Implantation</span><span class="tag">MOSFET Process</span>
-          </div>
-        </div>
-        <div class="about-certs">
-          <div class="about-certs-label">Certifications</div>
-          <div class="cert-pills" style="display:flex;flex-wrap:wrap;gap:8px">
-            <button type="button" class="tag tag-cert" style="color:var(--accent);border-color:var(--accent-mid);background:var(--accent-light)" data-cert="six-sigma" aria-haspopup="dialog" aria-label="Preview Six Sigma Yellow Belt certificate">Six Sigma Yellow Belt</button>
-            <button type="button" class="tag tag-cert" data-cert="kennesaw" aria-haspopup="dialog" aria-label="Preview Kennesaw State University certificate">Kennesaw State University</button>
-            <button type="button" class="tag tag-cert" data-cert="opjems" aria-haspopup="dialog" aria-label="Preview OPJEMS Scholar 2022 certificate">OPJEMS Scholar 2022</button>
-          </div>
-        </div>
-      </div>
+      <ul class="about-affil">
+        <li>
+          <span class="af-logo"><img src="assets/logos/ntu.png" alt="National Taiwan University logo" width="52" height="52" decoding="async" onerror="this.parentNode.classList.add('no-logo');this.remove()"/><b>NTU</b></span>
+          <span class="af-v"><strong>National Taiwan University</strong>, Taipei<br/><small>GSAT · Graduate School of Advanced Technology</small></span>
+        </li>
+        <li>
+          <span class="af-logo"><img src="assets/logos/iisc.png" alt="Indian Institute of Science logo" width="52" height="52" decoding="async" onerror="this.parentNode.classList.add('no-logo');this.remove()"/><b>IISc</b></span>
+          <span class="af-v"><strong>Indian Institute of Science</strong>, Bangalore<br/><small>CeNSE · Centre for Nanoscience &amp; Engineering</small></span>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
@@ -823,6 +809,28 @@
     <div class="sec-label">Projects</div>
     <h2 class="sec-title">Selected <em>research work</em></h2>
     <div class="projects-grid">
+      <div class="proj-card proj-card--featured">
+        <div class="proj-feat">
+          <div>
+            <div class="proj-chip">Master's Thesis · Ongoing</div>
+            <div class="proj-title">Master's Thesis: ALD High-k Dielectrics</div>
+            <div class="proj-sub">Y-doped ZrO₂ · MIM &amp; MOS structures</div>
+            <ul class="proj-points">
+              <li>Developing ALD process recipes for ZrO₂ films with different yttrium (Y) doping</li>
+              <li>Fabricating MIM and MOS test devices in the <a href="https://sites.google.com/g.ntu.edu.tw/jiunyun/home" target="_blank" rel="noopener">QEL Lab</a> (Prof. Jiun-Yun Li's group, Electrical Engineering, NTU)</li>
+              <li>Analysing C–V and I–V data to evaluate performance for the 7 Å node (TSMC)</li>
+            </ul>
+          </div>
+          <div class="proj-side">
+            <div class="proj-side-label">Hands-on cleanroom work</div>
+            <div class="proj-tags">
+              <span class="tag">Photolithography</span><span class="tag">Wet / Dry Etching</span><span class="tag">ALD</span><span class="tag">PVD</span><span class="tag">PECVD</span><span class="tag">Rapid Thermal Annealing</span><span class="tag">Ion Implantation</span><span class="tag">MOSFET Process</span>
+            </div>
+            <div class="proj-year">Ongoing · NTU (QEL Lab)</div>
+          </div>
+        </div>
+      </div>
+
       <div class="proj-card">
         <div class="proj-chip">Thin Films</div>
         <div class="proj-title">Optimization of SnO₂ Thin-Film for TCO Applications</div>
@@ -890,6 +898,34 @@
           <div class="ach-detail">Selected among the top 80 engineering students in India by JSW Group for academic and leadership excellence.</div>
         </div>
       </div>
+    </div>
+
+    <div class="ach-sub">Certifications</div>
+    <div class="ach-grid">
+      <button type="button" class="ach-card ach-cert tag-cert" data-cert="six-sigma" aria-haspopup="dialog" aria-label="Preview Six Sigma Yellow Belt certificate">
+        <div class="ach-icon">📜</div>
+        <div>
+          <div class="ach-name">Six Sigma Yellow Belt</div>
+          <div class="ach-detail">Kennesaw State University</div>
+          <span class="ach-cta">View certificate →</span>
+        </div>
+      </button>
+      <button type="button" class="ach-card ach-cert tag-cert" data-cert="kennesaw" aria-haspopup="dialog" aria-label="Preview Kennesaw State University certificate">
+        <div class="ach-icon">🎓</div>
+        <div>
+          <div class="ach-name">Kennesaw State University</div>
+          <div class="ach-detail">Certificate of completion</div>
+          <span class="ach-cta">View certificate →</span>
+        </div>
+      </button>
+      <button type="button" class="ach-card ach-cert tag-cert" data-cert="opjems" aria-haspopup="dialog" aria-label="Preview OPJEMS Scholar 2022 certificate">
+        <div class="ach-icon">🌟</div>
+        <div>
+          <div class="ach-name">OPJEMS Scholar 2022</div>
+          <div class="ach-detail">JSW Group · OP Jindal Engineering &amp; Management Scholarship</div>
+          <span class="ach-cta">View certificate →</span>
+        </div>
+      </button>
     </div>
   </div>
 </section>
@@ -1109,7 +1145,7 @@
 </div>
 
 <!-- EmailJS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 
 <!-- FOOTER -->
 <footer>
@@ -1147,7 +1183,7 @@
     let current='';
     sections.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop<=y+100)current=id;});
     document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current);});
-  });
+  },{passive:true});
   document.getElementById('hamburger').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')toggleMenu();});
 
   // ════════════════════════════════════════════════════════════
@@ -1650,7 +1686,7 @@
     if (reduce) return;
 
     const groups = [
-      '.sec-label', 'h2.sec-title', '.about-text p', '.about-right > *',
+      '.sec-label', 'h2.sec-title', '.about-text p', '.about-affil li',
       '.skill-card', '.tl-item', '.proj-card', '.ach-card', '.pub-card',
       '.edu-tl-item', '.contact-card--left > *'
     ];
